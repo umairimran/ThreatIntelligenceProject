@@ -28,7 +28,7 @@ def pulses():
     ## At This Point when the user profiling thing will come we would a
     # addd the user setted env from the database and then we will search to make feed customizes
     query="malware"
-    pulses=[]
+    pulses=get_pulses(query,100)
     return render_template('pulses.html',pulses=pulses)
 
 @app.route('/get_pulse_full_detail',methods=['GET','POST'])

@@ -11,6 +11,6 @@ env/Scripts/activate
 pip install -r requirments.txt
 
 
-## make .env file and  plave your api key there
+## make .env file and place your api key there in project folder 
 
 API_KEY="your api key"
