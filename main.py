@@ -7,7 +7,7 @@ import os
 from flask import url_for,flash
 from flask import session
 from functions import *
-
+from tinyDb import *
 app=Flask(__name__)
 
 def get_default_pulses():
@@ -81,5 +81,203 @@ def single_indicator():
         return render_template('single_indicators_details.html', single_indicator=single_indicator,urls_list=urls_list,passive_dns_list=passive_dns_list)
      
     return render_template('single_indicators_details.html',single_indicator=[],urls_list=[],passive_dns_list=[])
+
+@app.route('/cve', methods=['GET', 'POST'])
+def cve_page():
+    if request.method == 'GET':
+        """
+        In this function, we will get the query-based results,
+        but here just for page demo, doing this.
+        This will appear after the page that will have all 
+        the list of indicators. When a user clicks on one, 
+        it will open a page and get the indicator from the cache
+        of the session and pass its info to the page.
+        """
+        i = otx_object.get_indicator_details_full(indicator_type=CVE, indicator='CVE-2012-1723')
+        df = json_normalize(i)
+
+        # Define a helper function to safely get values from the DataFrame
+        def safe_get(column_name):
+            return df[column_name][0] if column_name in df.columns else ''
+
+        general_sections = safe_get('general.sections')
+        general_mitre_url = safe_get('general.mitre_url')
+        general_nvd_url = safe_get('general.nvd_url')
+        general_indicator = safe_get('general.indicator')
+        general_type_title = safe_get('general.type_title')
+        general_base_indicator_id = int(safe_get('general.base_indicator.id')) if safe_get('general.base_indicator.id') else 0
+        general_base_indicator_type = safe_get('general.base_indicator.type')
+        general_pulse_info_count = safe_get('general.pulse_info.count')
+        general_pulse_info_pulses = safe_get('general.pulse_info.pulses')
+        general_pulse_info_references = safe_get('general.pulse_info.references')
+        general_pulse_info_related_alienvault_malware_families = safe_get('general.pulse_info.related.alienvault.malware_families')
+        general_pulse_info_related_alienvault_industries = safe_get('general.pulse_info.related.alienvault.industries')
+        general_pulse_info_related_other_adversary = safe_get('general.pulse_info.related.other.adversary')
+        general_pulse_info_related_other_malware_families = safe_get('general.pulse_info.related.other.malware_families')
+        general_pulse_info_related_other_industries = safe_get('general.pulse_info.related.other.industries')
+        general_false_positive = safe_get('general.false_positive')
+        general_cve = safe_get('general.cve')
+        general_cvss_access_complexity = safe_get('general.cvss.Access-Complexity')
+        general_cvss_access_vector = safe_get('general.cvss.Access-Vector')
+        general_cvss_authentication = safe_get('general.cvss.Authentication')
+        general_cvss_availability_impact = safe_get('general.cvss.Availability-Impact')
+        general_cvss_score = safe_get('general.cvss.Score')
+        general_cvss_confidentiality_impact = safe_get('general.cvss.Confidentiality-Impact')
+        general_cvss_integrity_impact = safe_get('general.cvss.Integrity-Impact')
+        general_cvss_vector_string = safe_get('general.cvss.vectorString')
+        general_cvssv2_ac_insuf_info = safe_get('general.cvssv2.acInsufInfo')
+        general_cvssv2_access_complexity = safe_get('general.cvssv2.cvssV2.accessComplexity')
+        general_cvssv2_access_vector = safe_get('general.cvssv2.cvssV2.accessVector')
+        general_cvssv2_authentication = safe_get('general.cvssv2.cvssV2.authentication')
+        general_cvssv2_availability_impact = safe_get('general.cvssv2.cvssV2.availabilityImpact')
+        general_cvssv2_base_score = safe_get('general.cvssv2.cvssV2.baseScore')
+        general_cvssv2_confidentiality_impact = safe_get('general.cvssv2.cvssV2.confidentialityImpact')
+        general_cvssv2_integrity_impact = safe_get('general.cvssv2.cvssV2.integrityImpact')
+        general_cvssv2_version = safe_get('general.cvssv2.cvssV2.version')
+        general_cvssv2_exploitability_score = safe_get('general.cvssv2.exploitabilityScore')
+        general_cvssv2_impact_score = safe_get('general.cvssv2.impactScore')
+        general_cvssv2_obtain_all_privilege = safe_get('general.cvssv2.obtainAllPrivilege')
+        general_cvssv2_obtain_other_privilege = safe_get('general.cvssv2.obtainOtherPrivilege')
+        general_cvssv2_obtain_user_privilege = safe_get('general.cvssv2.obtainUserPrivilege')
+        general_cvssv2_severity = safe_get('general.cvssv2.severity')
+        general_cvssv2_user_interaction_required = safe_get('general.cvssv2.userInteractionRequired')
+        general_cvssv3_attack_complexity = safe_get('general.cvssv3.cvssV3.attackComplexity')
+        general_cvssv3_attack_vector = safe_get('general.cvssv3.cvssV3.attackVector')
+        general_cvssv3_availability_impact = safe_get('general.cvssv3.cvssV3.availabilityImpact')
+        general_cvssv3_base_score = safe_get('general.cvssv3.cvssV3.baseScore')
+        general_cvssv3_base_severity = safe_get('general.cvssv3.cvssV3.baseSeverity')
+        general_cvssv3_confidentiality_impact = safe_get('general.cvssv3.cvssV3.confidentialityImpact')
+        general_cvssv3_integrity_impact = safe_get('general.cvssv3.cvssV3.integrityImpact')
+        general_cvssv3_privileges_required = safe_get('general.cvssv3.cvssV3.privilegesRequired')
+        general_cvssv3_scope = safe_get('general.cvssv3.cvssV3.scope')
+        general_cvssv3_user_interaction = safe_get('general.cvssv3.cvssV3.userInteraction')
+        general_cvssv3_version = safe_get('general.cvssv3.cvssV3.version')
+        general_cvssv3_exploitability_score = safe_get('general.cvssv3.exploitabilityScore')
+        general_cvssv3_impact_score = safe_get('general.cvssv3.impactScore')
+        
+        general_configurations_cve_data_version = safe_get('general.configurations.CVE_data_version')
+       
+        general_configurations_nodes = []
+        for cpe in safe_get('general.configurations.nodes'):
+            if isinstance(cpe, list):  # Ensure cpe is a list before iterating
+                general_configurations_nodes.extend(cpe['cpe_match'] for cpe in cpe if 'cpe_match' in cpe)
+
+        general_cwe = safe_get('general.cwe')
+        general_products = safe_get('general.products')
+        general_seen_wild = safe_get('general.seen_wild')
+        general_references = safe_get('general.references')
+        general_description = safe_get('general.description')
+        general_date_modified = safe_get('general.date_modified')
+        general_date_created = safe_get('general.date_created')
+        general_exploits = safe_get('general.exploits')
+        general_epss = safe_get('general.epss')
+        
+        return render_template('indicator_full_detail.html', 
+                               general_sections=general_sections,
+                               general_mitre_url=general_mitre_url,
+                               general_nvd_url=general_nvd_url,
+                               general_indicator=general_indicator,
+                               general_type_title=general_type_title,
+                               general_base_indicator_id=general_base_indicator_id,
+                               general_base_indicator_type=general_base_indicator_type,
+                               general_pulse_info_count=general_pulse_info_count,
+                               general_pulse_info_pulses=general_pulse_info_pulses,
+                               general_pulse_info_references=general_pulse_info_references,
+                               general_pulse_info_related_alienvault_malware_families=general_pulse_info_related_alienvault_malware_families,
+                               general_pulse_info_related_alienvault_industries=general_pulse_info_related_alienvault_industries,
+                               general_pulse_info_related_other_adversary=general_pulse_info_related_other_adversary,
+                               general_pulse_info_related_other_malware_families=general_pulse_info_related_other_malware_families,
+                               general_pulse_info_related_other_industries=general_pulse_info_related_other_industries,
+                               general_false_positive=general_false_positive,
+                               general_cve=general_cve,
+                               general_cvss_access_complexity=general_cvss_access_complexity,
+                               general_cvss_access_vector=general_cvss_access_vector,
+                               general_cvss_authentication=general_cvss_authentication,
+                               general_cvss_availability_impact=general_cvss_availability_impact,
+                               general_cvss_score=general_cvss_score,
+                               general_cvss_confidentiality_impact=general_cvss_confidentiality_impact,
+                               general_cvss_integrity_impact=general_cvss_integrity_impact,
+                               general_cvss_vector_string=general_cvss_vector_string,
+                               general_cvssv2_ac_insuf_info=general_cvssv2_ac_insuf_info,
+                               general_cvssv2_access_complexity=general_cvssv2_access_complexity,
+                               general_cvssv2_access_vector=general_cvssv2_access_vector,
+                               general_cvssv2_authentication=general_cvssv2_authentication,
+                               general_cvssv2_availability_impact=general_cvssv2_availability_impact,
+                               general_cvssv2_base_score=general_cvssv2_base_score,
+                               general_cvssv2_confidentiality_impact=general_cvssv2_confidentiality_impact,
+                               general_cvssv2_integrity_impact=general_cvssv2_integrity_impact,
+                               general_cvssv2_version=general_cvssv2_version,
+                               general_cvssv2_exploitability_score=general_cvssv2_exploitability_score,
+                               general_cvssv2_impact_score=general_cvssv2_impact_score,
+                               general_cvssv2_obtain_all_privilege=general_cvssv2_obtain_all_privilege,
+                               general_cvssv2_obtain_other_privilege=general_cvssv2_obtain_other_privilege,
+                               general_cvssv2_obtain_user_privilege=general_cvssv2_obtain_user_privilege,
+                               general_cvssv2_severity=general_cvssv2_severity,
+                               general_cvssv2_user_interaction_required=general_cvssv2_user_interaction_required,
+                               general_cvssv3_attack_complexity=general_cvssv3_attack_complexity,
+                               general_cvssv3_attack_vector=general_cvssv3_attack_vector,
+                               general_cvssv3_availability_impact=general_cvssv3_availability_impact,
+                               general_cvssv3_base_score=general_cvssv3_base_score,
+                               general_cvssv3_base_severity=general_cvssv3_base_severity,
+                               general_cvssv3_confidentiality_impact=general_cvssv3_confidentiality_impact,
+                               general_cvssv3_integrity_impact=general_cvssv3_integrity_impact,
+                               general_cvssv3_privileges_required=general_cvssv3_privileges_required,
+                               general_cvssv3_scope=general_cvssv3_scope,
+                               general_cvssv3_user_interaction=general_cvssv3_user_interaction,
+                               general_cvssv3_version=general_cvssv3_version,
+                               general_cvssv3_exploitability_score=general_cvssv3_exploitability_score,
+                               general_cvssv3_impact_score=general_cvssv3_impact_score,
+                               general_configurations_cve_data_version=general_configurations_cve_data_version,
+                               general_configurations_nodes=general_configurations_nodes,
+                               general_cwe=general_cwe,
+                               general_products=general_products,
+                               general_seen_wild=general_seen_wild,
+                               general_references=general_references,
+                               general_description=general_description,
+                               general_date_modified=general_date_modified,
+                               general_date_created=general_date_created,
+                               general_exploits=general_exploits,
+                               general_epss=general_epss)
+
+@app.route("/search_indicators", methods=['GET', 'POST'])
+def search_indicators():
+    if request.method == 'GET':
+        query=""
+        ##Fetch the setted user setting from the user database and based on that then fetch the relevent indicators and show them ok
+    if request.method=='POST':
+        ## get the search  from  the search page
+        ## then search from the database and store in the cache for faster things
+        query=request.form['query']
+        ## here you will get the dataframe now traverse it and for each particular indicator make
+        ## a list and send them to the page as well as store them in cache
+    indicators_df=get_cleaned_indicator_data_from_database(query)
+    indicators_list = []
+        # Iterate through each row in the DataFrame
+    for index, row in indicators_df.iterrows():
+            # Extract specific values from the current row
+            general_indicator = row['indicator']
+            general_base_indicator_type = row['base_indicator.type']
+            general_cvssv2_vulnerability = row['cvssv2.severity']
+            general_cvssv3_attack_complexity = row['cvssv3.cvssV3.attackComplexity']
+            general_cvssv3_base_severity = row['cvssv3.cvssV3.baseSeverity']
+            general_cvssv3_exploitability_score = row['cvssv3.exploitabilityScore']
+            general_cvssv3_impact_score = row['cvssv3.impactScore']
+            # Append the extracted values as a dictionary to the list
+            indicators_list.append({
+                'indicator': general_indicator,
+                'base_indicator_type': general_base_indicator_type,
+                'cvssv2_vulnerability': general_cvssv2_vulnerability,
+                'cvssv3_attack_complexity': general_cvssv3_attack_complexity,
+                'cvssv3_base_severity': general_cvssv3_base_severity,
+                'cvssv3_exploitability_score': general_cvssv3_exploitability_score,
+                'cvssv3_impact_score': general_cvssv3_impact_score
+            })
+    return render_template('indicators.html', indicators=indicators_list)
+
+
+@app.route('/test',methods=['GET','POST'])
+def test():
+    return render_template('indicators.html')
+
 if __name__ == '__main__':
     app.run(port=5500)

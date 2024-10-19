@@ -4,16 +4,17 @@ from OTXv2 import *
 from pandas import json_normalize
 from dotenv import load_dotenv
 import IndicatorTypes
+
 import pandas as pd
 from IndicatorTypes import *
 import pandas
 import numpy as np
 from datetime import datetime, timedelta
+from tinyDb import *
 load_dotenv()
 ## load the environment variables
 api =  os.getenv('API_KEY')
 otx_object = OTXv2(api)
-
 def get_pulses(query,limit=10):
     # Get pulses from OTX
     pulses=[]
@@ -41,7 +42,6 @@ def get_pulse_detail(pulse_id):
     # Get pulse details from OTX
     pulse_details = otx_object.get_pulse_details(pulse_id)
     return pulse_details
-
 def get_pulse_indicators(pulse_id):
     # Get pulse indicators from OTX
     indicators = otx_object.get_pulse_indicators(pulse_id)
@@ -90,7 +90,6 @@ def get_indicator_type(indicator_type):
         return IPv6
     else:
         return None
-    
 def get_passive_dns_list_of_indicator(filtered_dataframe):
     flattened_data = []
     for index, row in filtered_dataframe.iterrows():
@@ -155,4 +154,5 @@ def get_indicators(modified_date, indicator_type):
     for each in indicator_list:
         indicators_full_details_list.append(otx_object.get_indicator_details_by_section(indicator_type=get_indicator_type(each['type']), indicator=each['indicator']))
     return indicators_full_details_list
-      
+
+

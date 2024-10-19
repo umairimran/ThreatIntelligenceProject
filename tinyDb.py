@@ -1,9 +1,12 @@
 from tinydb import *
 from functions import *
+from OTXv2 import *
 db = TinyDB('db.json')
 indicators_table = db.table('indicators')
 Indicator= Query()
-
+from dotenv import load_dotenv
+load_dotenv()
+otx_object = OTXv2(os.getenv('os.getenv('"API_KEY"')'))
 
 def insert_indicators_in_table(modified_date, indicator_type):
     """
@@ -40,4 +43,36 @@ def insert_indicators_in_table(modified_date, indicator_type):
             # Indicate that the indicator already exists
             print('Indicator already exists in database')
 
-insert_indicators_in_table('2024-01-01', 'CVE')
+def search_for_indicator(query):
+    """
+    Searches for an indicator in the database based on a query.
+
+    Parameters:
+    query (str): The query to search for in the database.
+
+    Returns:
+    list: A list of dictionaries containing the search results. in raw form 
+    """
+
+    pattern = re.compile(query, re.IGNORECASE)  # Case-insensitive regex pattern
+    results = []
+ 
+    for doc in indicators_table.all(): 
+        if any(pattern.search(str(value)) for value in doc.values()):
+            results.append(doc)
+    return results
+
+def get_cleaned_indicator_data_from_database(query):
+    ''''
+    This function takes input as query and searches by using the search for indicator function and then returns the cleaned data in the form of a dataframe
+
+    return : dataframe on each row is a complete indicator full details of a whole section
+    '''
+    raw_indicators=search_for_indicator(query)
+    df=json_normalize(raw_indicators)
+    return df
+    
+
+def get_single_indicator_full_details(data):
+    df=json_normalize(data)
+
