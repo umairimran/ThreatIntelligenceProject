@@ -113,10 +113,10 @@
                         
                             <div class="value">
                                 {% for each in general_pulse_info_related_other_industries %}
-                                <a target="_blank" href="/industry/{{ each }}" class="text-success">{{ each }}</a>,
+                                    <span class="text-success" style="cursor: pointer;" title="This link is not clickable">{{ each }}</span>{% if not loop.last %}, {% endif %}
                                 {% endfor %}
-                            
                             </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -276,7 +276,7 @@
                             <tr>
                                 <td class="text-wrap">{{ ref['external_source'] }}</td>
                                 <td class="text-wrap">
-                                    <a href="{{ ref['href'] }}" class="text-truncate" style="max-width: 150px;">{{ ref['name'] }}</a>
+                                    <a href="{{ ref['href'] }}" class="text-truncate d-block" style="max-width: 150px;">{{ ref['name'] }}</a>
                                 </td>
                                 <td class="text-wrap">{{ ref['type'] if ref['type'] else 'None' }}</td>
                                 <td class="text-wrap">{{ ref['tags'] | join(', ') }}</td>

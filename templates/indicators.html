@@ -32,341 +32,77 @@
                 </div>
             </div>
         </nav><div class="container mt-5 pt-2"> <!-- Add margin-top to push it below the navbar -->
-    <form class="search-form">
-        <div class="input-group">
-            <span class="input-group-text"><i class="fa fa-search"></i></span>
-            <input class="form-control" type="text" placeholder="I am looking for.." />
-            <button class="btn btn-light" type="button">Search</button>
-        </div>
-    </form>
+            <form class="search-form" method="POST" action="/search_indicators">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fa fa-search"></i></span>
+                    <input class="form-control" type="text" name="search_query" placeholder="I am looking for.." required />
+                    <button class="btn btn-light" type="submit">Search</button>
+                </div>
+            </form>
 </div>
     </div><div class="container mt-5"> <!-- Adjust the container margin as needed -->
-    <div class="row">
-        <!-- Card 1 -->
-        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-            <div class="card pulse even bg-dark text-white"> <!-- Dark theme for card -->
-                <div class="card-body">
-                    <div class="d-flex align-items-start">
-                        <div class="feed-item-details flex-grow-1">
-                            <h3 title="ETIC Cybersecurity 2024-10-18 Port Scan">
-                                <a href="/pulse/6711890439581db64eeb69c6" class="text-white">CVE CVE 1</a>
-                            </h3>
-                            <div class="details-wrapper">
-                                <div class="pulse-meta">
-                                    <ul class="list-unstyled d-flex justify-content-between flex-wrap">
-                                        <div class="left-items">
-                                            <li class="mr-4 d-flex align-items-center">
-                                                <span class="indicator_type">Type:&nbsp</span>
-                                                <span>&nbspCVE</span>
-                                            </li>
-                                            <li class="mr-4 d-flex align-items-center">
-                                                <span class="vulnerability"><i class="fa fa-circle blue"></i>&nbspVulnerability:&nbsp</span>
-                                                <span>&nbspHigh</span>
-                                            </li>
-                                        </div>
-                                        <div class="right-items">
-                                            <li class="mr-4 d-flex align-items-center">
-                                                <span><i class="fa fa-circle red"></i> Severity:&nbsp</span>
-                                                <span>HIGH</span>
-                                            </li>
-                                            <li class="mr-4 d-flex align-items-center">
-                                                <span><i class="fa fa-circle red"></i> Exploitability:&nbsp</span>
-                                                <span>HIGH</span>
-                                            </li>
-                                            <li class="mr-4 d-flex align-items-center">
-                                                <span><i class="fa fa-circle red"></i> Severity:&nbsp</span>
-                                                <span>HIGH</span>
-                                            </li>
-                                            <li class="d-flex align-items-center">
-                                                <span><i class="fa fa-circle blue"></i> Impact Score:&nbsp</span>
-                                                <span>HIGH</span>
-                                            </li>
-                                        </div>
-                                    </ul>
-                                </div>
-                                <div class="feed-item-desc">
-                                    <span class="nowrap ellipsis">Description or details can go here.</span>
+        <div class="row">
+            {% for indicator in indicators_list %}
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                <div class="card pulse even bg-dark text-white" style="height: 300px;"> <!-- Set a fixed height -->
+                    <div class="card-body d-flex flex-column">
+                        <h3 title="{{ indicator.indicator }}" class="text-truncate"> <!-- Use text-truncate for ellipsis -->
+                            <a href="#" class="text-white" onclick="event.preventDefault();"> <!-- Prevent default action -->
+                                {{ indicator.indicator }}
+                            </a>
+                        </h3>
+                        <div class="details-wrapper d-flex flex-column flex-grow-1"> <!-- Make this a flex container -->
+                            <div class="pulse-meta flex-grow-1"> <!-- Allow this to take remaining space -->
+                                <ul class="list-unstyled d-flex justify-content-between flex-wrap">
+                                    <li class="mr-4 d-flex align-items-center">
+                                        <span class="indicator_type">Type:&nbsp</span>
+                                        <span>&nbsp{{ indicator.base_indicator_type }}</span>
+                                    </li>
+                                    <li class="mr-4 d-flex align-items-center">
+                                        <span class="vulnerability"><i class="fa fa-circle blue" style="color: blue;"></i>&nbspVulnerability:&nbsp</span>
+                                        <span>&nbsp{{ indicator.cvssv2_vulnerability }}</span>
+                                    </li>
+                                    <li class="mr-4 d-flex align-items-center">
+                                        <span><i class="fa fa-circle red" style="color: red;"></i> Severity:&nbsp</span>
+                                        <span>{{ indicator.cvssv3_base_severity }}</span>
+                                    </li>
+                                    <li class="mr-4 d-flex align-items-center">
+                                        <span><i class="fa fa-circle blue" style="color: yellow;"></i>&nbspAttack Complexity:&nbsp</span>
+                                        <span>{{ indicator.cvssv3_attack_complexity }}</span>
+                                    </li>
+                                    <li class="mr-4 d-flex align-items-center">
+                                        <span><i class="fa fa-circle blue" style="color: green;"></i>&nbspExploitability Score:&nbsp</span>
+                                        <span>{{ indicator.cvssv3_exploitability_score }}</span>
+                                    </li>
+                                    <li class="mr-4 d-flex align-items-center">
+                                        <span>Impact Score:&nbsp</span>
+                                        <span>{{ indicator.cvssv3_impact_score }}</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        
+                            <div class="pulse-actions mt-3"> <!-- Button container -->
+                                <div class="d-flex justify-content-end"> <!-- Flexbox for alignment -->
+                                    <form method="POST" action="/cve"> <!-- Replace with your endpoint -->
+                                        <input type="hidden" name="indicator" value="{{ indicator.indicator }}">
+                                        <input type="hidden" name="base_indicator_type" value="{{ indicator.base_indicator_type }}">
+                                        <button type="submit" class="btn btn-light btn-lg" aria-haspopup="true">Details</button> <!-- Larger button -->
+                                    </form>
                                 </div>
                             </div>
+                            
                         </div>
-                    </div>
-                    <div class="pulse-actions mt-3">
-                        <ul class="stats">
-                            <li>
-                                <div class="action-item">
-                                    <div class="dropdown subscribe-button">
-                                        <button type="button" class="btn btn-light" aria-haspopup="true">
-                                            Details
-                                        </button>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
+                        
+                        
+                        
+                        
                     </div>
                 </div>
             </div>
-        </div>
-
-        <!-- Card 2 -->
-        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-            <div class="card pulse even bg-dark text-white">
-                <div class="card-body">
-                    <div class="d-flex align-items-start">
-                        <div class="feed-item-details flex-grow-1">
-                            <h3 title="ETIC Cybersecurity 2024-10-18 Port Scan">
-                                <a href="/pulse/6711890439581db64eeb69c6" class="text-white">CVE CVE 2</a>
-                            </h3>
-                            <div class="details-wrapper">
-                                <div class="pulse-meta">
-                                    <ul class="list-unstyled d-flex justify-content-between flex-wrap">
-                                        <div class="left-items">
-                                            <li class="mr-4 d-flex align-items-center">
-                                                <span class="indicator_type">Type:&nbsp</span>
-                                                <span>&nbspCVE</span>
-                                            </li>
-                                            <li class="mr-4 d-flex align-items-center">
-                                                <span class="vulnerability"><i class="fa fa-circle blue"></i>&nbspVulnerability:&nbsp</span>
-                                                <span>&nbspMedium</span>
-                                            </li>
-                                        </div>
-                                        <div class="right-items">
-                                            <li class="mr-4 d-flex align-items-center">
-                                                <span><i class="fa fa-circle red"></i> Severity:&nbsp</span>
-                                                <span>MEDIUM</span>
-                                            </li>
-                                            <li class="mr-4 d-flex align-items-center">
-                                                <span><i class="fa fa-circle red"></i> Exploitability:&nbsp</span>
-                                                <span>MEDIUM</span>
-                                            </li>
-                                            <li class="mr-4 d-flex align-items-center">
-                                                <span><i class="fa fa-circle red"></i> Severity:&nbsp</span>
-                                                <span>MEDIUM</span>
-                                            </li>
-                                            <li class="d-flex align-items-center">
-                                                <span><i class="fa fa-circle blue"></i> Impact Score:&nbsp</span>
-                                                <span>MEDIUM</span>
-                                            </li>
-                                        </div>
-                                    </ul>
-                                </div>
-                                <div class="feed-item-desc">
-                                    <span class="nowrap ellipsis">Description or details can go here.</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="pulse-actions mt-3">
-                        <ul class="stats">
-                            <li>
-                                <div class="action-item">
-                                    <div class="dropdown subscribe-button">
-                                        <button type="button" class="btn btn-light" aria-haspopup="true">
-                                            Details
-                                        </button>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Card 3 -->
-        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-            <div class="card pulse even bg-dark text-white">
-                <div class="card-body">
-                    <div class="d-flex align-items-start">
-                        <div class="feed-item-details flex-grow-1">
-                            <h3 title="ETIC Cybersecurity 2024-10-18 Port Scan">
-                                <a href="/pulse/6711890439581db64eeb69c6" class="text-white">CVE CVE 3</a>
-                            </h3>
-                            <div class="details-wrapper">
-                                <div class="pulse-meta">
-                                    <ul class="list-unstyled d-flex justify-content-between flex-wrap">
-                                        <div class="left-items">
-                                            <li class="mr-4 d-flex align-items-center">
-                                                <span class="indicator_type">Type:&nbsp</span>
-                                                <span>&nbspCVE</span>
-                                            </li>
-                                            <li class="mr-4 d-flex align-items-center">
-                                                <span class="vulnerability"><i class="fa fa-circle blue"></i>&nbspVulnerability:&nbsp</span>
-                                                <span>&nbspLow</span>
-                                            </li>
-                                        </div>
-                                        <div class="right-items">
-                                            <li class="mr-4 d-flex align-items-center">
-                                                <span><i class="fa fa-circle red"></i> Severity:&nbsp</span>
-                                                <span>LOW</span>
-                                            </li>
-                                            <li class="mr-4 d-flex align-items-center">
-                                                <span><i class="fa fa-circle red"></i> Exploitability:&nbsp</span>
-                                                <span>LOW</span>
-                                            </li>
-                                            <li class="mr-4 d-flex align-items-center">
-                                                <span><i class="fa fa-circle red"></i> Severity:&nbsp</span>
-                                                <span>LOW</span>
-                                            </li>
-                                            <li class="d-flex align-items-center">
-                                                <span><i class="fa fa-circle blue"></i> Impact Score:&nbsp</span>
-                                                <span>LOW</span>
-                                            </li>
-                                        </div>
-                                    </ul>
-                                </div>
-                                <div class="feed-item-desc">
-                                    <span class="nowrap ellipsis">Description or details can go here.</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="pulse-actions mt-3">
-                        <ul class="stats">
-                            <li>
-                                <div class="action-item">
-                                    <div class="dropdown subscribe-button">
-                                        <button type="button" class="btn btn-light" aria-haspopup="true">
-                                            Details
-                                        </button>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+            
+            {% endfor %}
         </div>
         
-        <!-- Add more cards as needed -->
-                <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-            <div class="card pulse even bg-dark text-white">
-                <div class="card-body">
-                    <div class="d-flex align-items-start">
-                        <div class="feed-item-details flex-grow-1">
-                            <h3 title="ETIC Cybersecurity 2024-10-18 Port Scan">
-                                <a href="/pulse/6711890439581db64eeb69c6" class="text-white">CVE CVE 3</a>
-                            </h3>
-                            <div class="details-wrapper">
-                                <div class="pulse-meta">
-                                    <ul class="list-unstyled d-flex justify-content-between flex-wrap">
-                                        <div class="left-items">
-                                            <li class="mr-4 d-flex align-items-center">
-                                                <span class="indicator_type">Type:&nbsp</span>
-                                                <span>&nbspCVE</span>
-                                            </li>
-                                            <li class="mr-4 d-flex align-items-center">
-                                                <span class="vulnerability"><i class="fa fa-circle blue"></i>&nbspVulnerability:&nbsp</span>
-                                                <span>&nbspLow</span>
-                                            </li>
-                                        </div>
-                                        <div class="right-items">
-                                            <li class="mr-4 d-flex align-items-center">
-                                                <span><i class="fa fa-circle red"></i> Severity:&nbsp</span>
-                                                <span>LOW</span>
-                                            </li>
-                                            <li class="mr-4 d-flex align-items-center">
-                                                <span><i class="fa fa-circle red"></i> Exploitability:&nbsp</span>
-                                                <span>LOW</span>
-                                            </li>
-                                            <li class="mr-4 d-flex align-items-center">
-                                                <span><i class="fa fa-circle red"></i> Severity:&nbsp</span>
-                                                <span>LOW</span>
-                                            </li>
-                                            <li class="d-flex align-items-center">
-                                                <span><i class="fa fa-circle blue"></i> Impact Score:&nbsp</span>
-                                                <span>LOW</span>
-                                            </li>
-                                        </div>
-                                    </ul>
-                                </div>
-                                <div class="feed-item-desc">
-                                    <span class="nowrap ellipsis">Description or details can go here.</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="pulse-actions mt-3">
-                        <ul class="stats">
-                            <li>
-                                <div class="action-item">
-                                    <div class="dropdown subscribe-button">
-                                        <button type="button" class="btn btn-light" aria-haspopup="true">
-                                            Details
-                                        </button>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-                <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-            <div class="card pulse even bg-dark text-white">
-                <div class="card-body">
-                    <div class="d-flex align-items-start">
-                        <div class="feed-item-details flex-grow-1">
-                            <h3 title="ETIC Cybersecurity 2024-10-18 Port Scan">
-                                <a href="/pulse/6711890439581db64eeb69c6" class="text-white">CVE CVE 3</a>
-                            </h3>
-                            <div class="details-wrapper">
-                                <div class="pulse-meta">
-                                    <ul class="list-unstyled d-flex justify-content-between flex-wrap">
-                                        <div class="left-items">
-                                            <li class="mr-4 d-flex align-items-center">
-                                                <span class="indicator_type">Type:&nbsp</span>
-                                                <span>&nbspCVE</span>
-                                            </li>
-                                            <li class="mr-4 d-flex align-items-center">
-                                                <span class="vulnerability"><i class="fa fa-circle blue"></i>&nbspVulnerability:&nbsp</span>
-                                                <span>&nbspLow</span>
-                                            </li>
-                                        </div>
-                                        <div class="right-items">
-                                            <li class="mr-4 d-flex align-items-center">
-                                                <span><i class="fa fa-circle red"></i> Severity:&nbsp</span>
-                                                <span>LOW</span>
-                                            </li>
-                                            <li class="mr-4 d-flex align-items-center">
-                                                <span><i class="fa fa-circle red"></i> Exploitability:&nbsp</span>
-                                                <span>LOW</span>
-                                            </li>
-                                            <li class="mr-4 d-flex align-items-center">
-                                                <span><i class="fa fa-circle red"></i> Severity:&nbsp</span>
-                                                <span>LOW</span>
-                                            </li>
-                                            <li class="d-flex align-items-center">
-                                                <span><i class="fa fa-circle blue"></i> Impact Score:&nbsp</span>
-                                                <span>LOW</span>
-                                            </li>
-                                        </div>
-                                    </ul>
-                                </div>
-                                <div class="feed-item-desc">
-                                    <span class="nowrap ellipsis">Description or details can go here.</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="pulse-actions mt-3">
-                        <ul class="stats">
-                            <li>
-                                <div class="action-item">
-                                    <div class="dropdown subscribe-button">
-                                        <button type="button" class="btn btn-light" aria-haspopup="true">
-                                            Details
-                                        </button>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        
-    </div>
 </div>
 
 <!-- Don't forget to include Bootstrap JS and CSS links in your HTML -->

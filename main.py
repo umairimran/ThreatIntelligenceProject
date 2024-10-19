@@ -84,7 +84,9 @@ def single_indicator():
 
 @app.route('/cve', methods=['GET', 'POST'])
 def cve_page():
-    if request.method == 'GET':
+    if request.method == 'POST':
+        indicator_type=request.form['base_indicator_type']
+        indicator=request.form['indicator']
         """
         In this function, we will get the query-based results,
         but here just for page demo, doing this.
@@ -93,7 +95,7 @@ def cve_page():
         it will open a page and get the indicator from the cache
         of the session and pass its info to the page.
         """
-        i = otx_object.get_indicator_details_full(indicator_type=CVE, indicator='CVE-2012-1723')
+        i = otx_object.get_indicator_details_full(indicator_type=get_indicator_type(indicator_type), indicator=indicator)
         df = json_normalize(i)
 
         # Define a helper function to safely get values from the DataFrame
@@ -157,11 +159,11 @@ def cve_page():
         
         general_configurations_cve_data_version = safe_get('general.configurations.CVE_data_version')
        
-        general_configurations_nodes = []
-        for cpe in safe_get('general.configurations.nodes'):
-            if isinstance(cpe, list):  # Ensure cpe is a list before iterating
-                general_configurations_nodes.extend(cpe['cpe_match'] for cpe in cpe if 'cpe_match' in cpe)
-
+        df['general.configurations.nodes'][0]
+        general_configurations_nodes=[]
+        for cpe in df['general.configurations.nodes'][0]:
+            general_configurations_nodes.append(cpe['cpe_match'])
+            
         general_cwe = safe_get('general.cwe')
         general_products = safe_get('general.products')
         general_seen_wild = safe_get('general.seen_wild')
@@ -247,11 +249,13 @@ def search_indicators():
     if request.method=='POST':
         ## get the search  from  the search page
         ## then search from the database and store in the cache for faster things
-        query=request.form['query']
+        query=request.form.get('search_query')
+        print("Here in post request")
         ## here you will get the dataframe now traverse it and for each particular indicator make
         ## a list and send them to the page as well as store them in cache
     indicators_df=get_cleaned_indicator_data_from_database(query)
     indicators_list = []
+    
         # Iterate through each row in the DataFrame
     for index, row in indicators_df.iterrows():
             # Extract specific values from the current row
@@ -272,7 +276,8 @@ def search_indicators():
                 'cvssv3_exploitability_score': general_cvssv3_exploitability_score,
                 'cvssv3_impact_score': general_cvssv3_impact_score
             })
-    return render_template('indicators.html', indicators=indicators_list)
+
+    return render_template('indicators.html', indicators_list=indicators_list)
 
 
 @app.route('/test',methods=['GET','POST'])
