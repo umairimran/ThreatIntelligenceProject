@@ -6,6 +6,4 @@ flask
 db-sqlite3
 tinydb
 timedelta
-fuzzywuzzy
-SpellChecker
-pyspellchecker
+flask_caching

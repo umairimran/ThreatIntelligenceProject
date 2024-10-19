@@ -4,11 +4,59 @@ from flask import request
 from flask import redirect
 from flask import render_template
 import os
+from flask_caching import Cache
+# Configure the cache
+
 from flask import url_for,flash
+from flask import Flask, render_template, request, redirect, flash, session
 from flask import session
 from functions import *
 from tinyDb import *
 app=Flask(__name__)
+cache = Cache(app, config={'CACHE_TYPE': 'simple'})
+app.secret_key = '123456789'
+# Create the users table when the app starts
+
+create_users_table()
+
+
+@cache.cached(timeout=300, query_string=True)  # Cache for 5 minutes
+def get_cached_indicators(query):
+    return get_cleaned_indicator_data_from_database(query)
+
+@app.route('/signup', methods=['GET', 'POST'])
+def signup_route():
+    if request.method == 'POST':
+        username = request.form['username']
+        email = request.form['email']
+        password = request.form['password']
+        designation = request.form['designation']
+        signup(username, email, password, designation)  # Call signup function
+        return redirect(url_for('login'))  # Redirect to login page after signup
+
+    return render_template('signup.html')  # Render signup page if GET request
+@app.route('/login', methods=['GET', 'POST'])
+def login_route():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        user = login(email, password)
+
+        if user:
+            session['user_id'] = user['id']  # Store user ID in session
+            return redirect(url_for('search_indicators'))
+   
+    return render_template('login.html')  # Render login template on GET or unsuccessful login
+
+@app.route('/logout')
+def logout():
+    session.pop('user_id', None)  # Remove user ID from session
+    session.pop('username', None)  # Optionally remove username
+    flash('You have been logged out.', 'success')
+    return redirect('/login')  # Redirect to login page after logout
+
+def is_logged_in():
+    return 'user_id' in session
 
 def get_default_pulses():
     # Return default pulses data for initial page load
@@ -16,7 +64,7 @@ def get_default_pulses():
 
 @app.route('/')
 def index():
-    return redirect(url_for('pulses'))
+    return redirect(url_for('search_indicators'))
 
 @app.route('/pulses',methods=['GET','POST'])
 def pulses():
@@ -243,46 +291,52 @@ def cve_page():
 
 @app.route("/search_indicators", methods=['GET', 'POST'])
 def search_indicators():
+    query = ""
+
     if request.method == 'GET':
-        query=""
-        ##Fetch the setted user setting from the user database and based on that then fetch the relevent indicators and show them ok
-    if request.method=='POST':
-        ## get the search  from  the search page
-        ## then search from the database and store in the cache for faster things
-        query=request.form.get('search_query')
-        print("Here in post request")
-        ## here you will get the dataframe now traverse it and for each particular indicator make
-        ## a list and send them to the page as well as store them in cache
-    indicators_df=get_cleaned_indicator_data_from_database(query)
+        # Fetch user settings and show relevant indicators based on those settings
+        # Placeholder: get user settings from database (not implemented)
+        # Example: user_settings = get_user_settings(user_id)
+        query = ""  # Query might be based on user preferences
+
+    if request.method == 'POST':
+        # Get the search query from the search form
+        query = request.form.get('search_query', '')
+        print(f"Received POST request with search query: {query}")
+        # You can fetch results from your database and cache them for future requests
+        # Example: store the result in cache for future faster access
+
+    # Fetch indicators from cache or database based on query
+    indicators_df = get_cleaned_indicator_data_from_database(query)
     indicators_list = []
-    
+    indicators_df=indicators_df.head(100)
+    # Check if DataFrame is not empty or null
+    if indicators_df is not None and not indicators_df.empty:
         # Iterate through each row in the DataFrame
-    for index, row in indicators_df.iterrows():
-            # Extract specific values from the current row
-            general_indicator = row['indicator']
-            general_base_indicator_type = row['base_indicator.type']
-            general_cvssv2_vulnerability = row['cvssv2.severity']
-            general_cvssv3_attack_complexity = row['cvssv3.cvssV3.attackComplexity']
-            general_cvssv3_base_severity = row['cvssv3.cvssV3.baseSeverity']
-            general_cvssv3_exploitability_score = row['cvssv3.exploitabilityScore']
-            general_cvssv3_impact_score = row['cvssv3.impactScore']
-            # Append the extracted values as a dictionary to the list
+        for index, row in indicators_df.iterrows():
+            # Extract specific values from the current row with default fallback values
             indicators_list.append({
-                'indicator': general_indicator,
-                'base_indicator_type': general_base_indicator_type,
-                'cvssv2_vulnerability': general_cvssv2_vulnerability,
-                'cvssv3_attack_complexity': general_cvssv3_attack_complexity,
-                'cvssv3_base_severity': general_cvssv3_base_severity,
-                'cvssv3_exploitability_score': general_cvssv3_exploitability_score,
-                'cvssv3_impact_score': general_cvssv3_impact_score
+                'indicator': row.get('general.base_indicator.indicator', ''),
+                'base_indicator_type': row.get('general.base_indicator.type', ''),
+                'cvssv2_vulnerability': row.get('general.cvssv2.severity', 'N/A'),
+                'cvssv3_attack_complexity': row.get('general.cvssv3.cvssV3.attackComplexity', 'N/A'),
+                'cvssv3_base_severity': row.get('general.cvssv3.cvssV3.baseSeverity', 'N/A'),
+                'cvssv3_exploitability_score': float(row.get('general.cvssv3.exploitabilityScore', 0.0)),
+                'cvssv3_impact_score': float(row.get('general.cvssv3.impactScore', 0.0))
             })
 
+    # Return the indicators to be rendered on the indicators.html template
     return render_template('indicators.html', indicators_list=indicators_list)
-
 
 @app.route('/test',methods=['GET','POST'])
 def test():
     return render_template('indicators.html')
 
+
+@app.route('/refresh_database',methods=['GET','POST'])
+def refresh_database():
+    if request.method == 'POST':
+        refresh()
+        return redirect(url_for('search_indicators'))
 if __name__ == '__main__':
     app.run(port=5500)

@@ -4,13 +4,14 @@ from OTXv2 import *
 from pandas import json_normalize
 from dotenv import load_dotenv
 import IndicatorTypes
-
+import sqlite3
 import pandas as pd
+from flask import flash
 from IndicatorTypes import *
 import pandas
 import numpy as np
 from datetime import datetime, timedelta
-from tinyDb import *
+
 load_dotenv()
 ## load the environment variables
 api =  os.getenv('API_KEY')
@@ -152,7 +153,76 @@ def get_indicators(modified_date, indicator_type):
     
     indicator_list=list(indicators)
     for each in indicator_list:
-        indicators_full_details_list.append(otx_object.get_indicator_details_by_section(indicator_type=get_indicator_type(each['type']), indicator=each['indicator']))
+        indicators_full_details_list.append(otx_object.get_indicator_details_full(indicator_type=get_indicator_type(each['type']), indicator=each['indicator']))
     return indicators_full_details_list
+
+DATABASE='users.db'
+
+def get_db_connection():
+    conn = sqlite3.connect(DATABASE)
+    conn.row_factory = sqlite3.Row
+    return conn
+def create_users_table():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT NOT NULL,
+            email TEXT NOT NULL UNIQUE,
+            password TEXT NOT NULL,
+            designation TEXT NOT NULL
+        )
+    ''')
+    conn.commit()
+    conn.close()
+def signup(username, email, password, designation):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute('''
+            INSERT INTO users (username, email, password, designation)
+            VALUES (?, ?, ?, ?)
+        ''', (username, email, password))  # Password should be hashed in production
+
+        conn.commit()
+        user_id = cursor.lastrowid  # Get the user ID of the newly created user
+        flash('Account created successfully!', 'success')
+        return user_id  # Return the new user ID
+    except sqlite3.IntegrityError:
+        flash('Email already exists. Please use a different email.', 'danger')
+        return None
+    finally:
+        conn.close()
+
+def login(email, password):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute('SELECT * FROM users WHERE email=?', (email,))
+    user = cursor.fetchone()
+
+    if user and user['password'] == password:  # Validate password (consider hashing)
+        return user  # Return user information for session management
+    else:
+        flash('Invalid credentials. Please try again.', 'danger')
+        return None
+# app/functiona.py
+
+def create_software_table():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS software (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER,
+            software_name TEXT NOT NULL,
+            vulnerability TEXT NOT NULL,
+            FOREIGN KEY (user_id) REFERENCES users(id)
+        )
+    ''')
+    conn.commit()
+    conn.close()
 
 

@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>ThreatIntelligenceProjectDesign</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/css/Apple-Navbar-Cinel.css">
+    <link rel="stylesheet" href="assets/css/Login-with-overlay-image.css">
+    <link rel="stylesheet" href="assets/css/Pretty-Search-Form-.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-dark navbar-expand-md fixed-top bg-dark">
+        <div class="container"><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button><a href="#">THREAT LAB</a>
+            <div class="collapse navbar-collapse" id="navcol-1">
+                <ul class="navbar-nav flex-grow-1 justify-content-between">
+                    <li class="nav-item"><a class="nav-link" href="#"></a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="indicators.html">Indicators</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">iPhone</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Watch</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">TV</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Settings</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Login</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#"><i class="fa fa-search"></i></a></li>
+                    <li class="nav-item"><a class="nav-link" href="#"><i class="fa fa-shopping-bag"></i></a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <section class="py-4 py-xl-5"></section>
+    <div class="container">
+        <div class="row"><div class="col-md-6">
+    <div class="side bg-dark text-light p-4"> <!-- Added padding -->
+        <div class="content col-12 overview">
+            <h2 class="section-heading">CVE Overview</h2>
+            <p>Unspecified vulnerability in the Java Runtime Environment (JRE) component in Oracle Java SE 7 update 4 and earlier, 6 update 32 and earlier, 5 update 35 and earlier, and 1.4.2_37 and earlier allows remote attackers to affect confidentiality, integrity, and availability via unknown vectors related to Hotspot.</p>
+        </div>
+
+        <div class="details-container content">
+            <div class="data-block">
+                <p class="cwe">
+                    <span class="ref-label label-text">CWE: </span>
+                    <span class="nowrap ellipsis pull-right">
+                        <a target="_blank" href="https://cwe.mitre.org/data/definitions/CWE.html" class="text-success">https://cwe.mitre.org/data/definitions/CWE.html</a> <!-- Green link -->
+                    </span>
+                </p>
+                <p>
+                    <span class="ref-label label-text">CVE: </span>
+                    <span class="nowrap ellipsis pull-right">CVE-2012-1723</span>
+                </p>
+                <p>
+                    <span class="ref-label label-text">Creation Date: </span>
+                    <span class="nowrap ellipsis pull-right">Jun. 16, 2012, 9:55 PM</span>
+                </p>
+                <p>
+                    <span class="ref-label label-text">Last Modified Date: </span>
+                    <span class="nowrap ellipsis pull-right">Jul. 16, 2024, 5:38 PM</span>
+                </p>
+                <p>
+                    <i class="fa fa-warning text-danger"></i> <!-- Red warning icon -->
+                    <span id="seen-wild" class="ref-label label-text">LevelBlue has seen this actively exploited in the wild</span>
+                </p>
+            </div>
+        </div>
+<br>
+        <br>
+        <br>
+        <div class="content">
+            <div class="overall-container bg-black p-4"> <!-- Black background with padding -->
+                <h2 class="section-heading">Exploit Activity</h2>
+                <div class="contents">
+                    <div class="section no-padding threat-actors">
+                        <div class="header">Associated Threat Actors:</div>
+                        <div class="item">
+                            <div class="title">User-Created Pulses:</div>
+                            <div class="value">
+                                <a target="_blank" href="/adversary/Unknown" class="text-success">Unknown</a> <!-- Green link -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section no-padding">
+                        <div class="header">Industries Targeted:</div>
+                        <div class="item">
+                            <div class="title">User-Created Pulses:</div>
+                            <div class="value">
+                                <a target="_blank" href="/industry/Education" class="text-success">Education</a>,
+                                <a target="_blank" href="/industry/Government" class="text-success">Government</a>,
+                                <a target="_blank" href="/industry/Healthcare" class="text-success">Healthcare</a>,
+                                <a target="_blank" href="/industry/Technology" class="text-success">Technology</a>,
+                                <a target="_blank" href="/industry/Telecommunications" class="text-success">Telecommunications</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- End of overall-container -->
+        </div>
+        <br>
+        <br>
+        <br>
+    </div> <!-- End of side -->
+</div> <!-- End of col-md-6 -->
+<div class="col-md-6">
+    <div class="side bg-dark text-light p-3"> <!-- Added bg-dark and text-light classes -->
+        <div class="content col-12 no-padding ng-star-inserted">
+            <h2 class="section-heading">CVSS V2 Severity</h2>
+            <p class="ng-star-inserted">
+                <span class="ref-label label-text">Access-Complexity: </span>
+                <span class="nowrap ellipsis pull-right">LOW</span>
+            </p>
+            <p class="ng-star-inserted">
+                <span class="ref-label label-text">Access-Vector: </span>
+                <span class="nowrap ellipsis pull-right">NETWORK</span>
+            </p>
+            <p class="ng-star-inserted">
+                <span class="ref-label label-text">Authentication: </span>
+                <span class="nowrap ellipsis pull-right">NONE</span>
+            </p>
+            <p class="ng-star-inserted">
+                <span class="ref-label label-text">Availability-Impact: </span>
+                <span class="nowrap ellipsis pull-right">COMPLETE</span>
+            </p>
+            <p class="ng-star-inserted">
+                <span class="ref-label label-text">Score: </span>
+                <span class="nowrap ellipsis pull-right">10.0</span>
+            </p>
+            <p class="ng-star-inserted">
+                <span class="ref-label label-text">Confidentiality-Impact: </span>
+                <span class="nowrap ellipsis pull-right">COMPLETE</span>
+            </p>
+            <p class="ng-star-inserted">
+                <span class="ref-label label-text">Integrity-Impact: </span>
+                <span class="nowrap ellipsis pull-right">COMPLETE</span>
+            </p>
+            <p class="ng-star-inserted">
+                <span class="ref-label label-text">vectorString: </span>
+                <span class="nowrap ellipsis pull-right">AV:N/AC:L/Au:N/C:C/I:C/A:C</span>
+            </p>
+        </div>
+
+        <div class="content col-12 no-padding ng-star-inserted">
+            <h2 class="section-heading">CVSS V3 Severity</h2>
+            <p class="ng-star-inserted">
+                <span class="ref-label label-text">Attack Complexity: </span>
+                <span class="nowrap ellipsis pull-right">LOW</span>
+            </p>
+            <p class="ng-star-inserted">
+                <span class="ref-label label-text">Attack Vector: </span>
+                <span class="nowrap ellipsis pull-right">NETWORK</span>
+            </p>
+            <p class="ng-star-inserted">
+                <span class="ref-label label-text">Availability Impact: </span>
+                <span class="nowrap ellipsis pull-right">HIGH</span>
+            </p>
+            <p class="ng-star-inserted">
+                <span class="ref-label label-text">Base Score: </span>
+                <span class="nowrap ellipsis pull-right">9.8</span>
+            </p>
+            <p class="ng-star-inserted">
+                <span class="ref-label label-text">Base Severity: </span>
+                <span class="nowrap ellipsis pull-right">CRITICAL</span>
+            </p>
+            <p class="ng-star-inserted">
+                <span class="ref-label label-text">Confidentiality Impact: </span>
+                <span class="nowrap ellipsis pull-right">HIGH</span>
+            </p>
+            <p class="ng-star-inserted">
+                <span class="ref-label label-text">Integrity Impact: </span>
+                <span class="nowrap ellipsis pull-right">HIGH</span>
+            </p>
+            <p class="ng-star-inserted">
+                <span class="ref-label label-text">Privileges Required: </span>
+                <span class="nowrap ellipsis pull-right">NONE</span>
+            </p>
+            <p class="ng-star-inserted">
+                <span class="ref-label label-text">User Interaction: </span>
+                <span class="nowrap ellipsis pull-right">NONE</span>
+            </p>
+            <p class="ng-star-inserted">
+                <span class="ref-label label-text">Exploitability Score: </span>
+                <span class="nowrap ellipsis pull-right">3.9</span>
+            </p>
+            <p class="ng-star-inserted">
+                <span class="ref-label label-text">Impact Score: </span>
+                <span class="nowrap ellipsis pull-right">5.9</span>
+            </p>
+        </div>
+    </div>
+</div>
+</div>
+    </div>
+    <div class="container">
+        <div class="row"><div class="col-md-12">
+<otx-cve-analysis-tab _ngcontent-rtf-c266="" _nghost-rtf-c262="" class="ng-star-inserted">
+    <div _ngcontent-rtf-c262="" id="nidsList" class="section hide" bis_skin_checked="1">
+        <otx-ioc-associated-nids _ngcontent-rtf-c262="" class="col-xs-12 no-margin no-padding row" _nghost-rtf-c177="">
+            <div _ngcontent-rtf-c177="" id="nidsSubscriptionBlock" class="full-width ng-star-inserted" bis_skin_checked="1">
+                <div _ngcontent-rtf-c177="" bis_skin_checked="1">
+                    <h2 _ngcontent-rtf-c177="" class="section-heading">Network IDS Signature Hits</h2>
+                </div>
+                <div _ngcontent-rtf-c177="" class="code well bw" bis_skin_checked="1"> 
+                    Network IDS Signature Hits only available to members of LevelBlue Labs Threat Intelligence Subscription 
+                </div>
+            </div>
+        </otx-ioc-associated-nids>
+    </div>
+    <div _ngcontent-rtf-c262="" id="files" class="section" bis_skin_checked="1">
+        <otx-ioc-associated-files _ngcontent-rtf-c262="" _nghost-rtf-c176="">
+            <div class="col-12">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>External Source</th>
+                            <th>Link</th>
+                            <th>Type</th>
+                            <th>Tags</th>
+                            <th>Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>MISC</td>
+                            <td><a href="https://portal.msrc.microsoft.com/en-US/security-guidance/advisory/CVE-2021-40444">CVE-2021-40444</a></td>
+                            <td>None</td>
+                            <td>Mitigation, Patch, Vendor Advisory</td>
+                            <td><a href="https://portal.msrc.microsoft.com/en-US/security-guidance/advisory/CVE-2021-40444">CVE-2021-40444</a></td>
+                        </tr>
+                        <tr>
+                            <td>MISC</td>
+                            <td><a href="http://packetstormsecurity.com/files/164210/Microsoft-Windows-MSHTML-Overview.html">Microsoft Windows MSHTML Overview</a></td>
+                            <td>None</td>
+                            <td>Third Party Advisory, VDB Entry</td>
+                            <td><a href="http://packetstormsecurity.com/files/164210/Microsoft-Windows-MSHTML-Overview.html">Microsoft Windows MSHTML Overview</a></td>
+                        </tr>
+                        <tr>
+                            <td>MISC</td>
+                            <td><a href="http://packetstormsecurity.com/files/165214/Microsoft-Office-Word-MSHTML-Remote-Code-Execution.html">Microsoft Office Word MSHTML Remote Code Execution</a></td>
+                            <td>None</td>
+                            <td>Exploit, Third Party Advisory, VDB Entry</td>
+                            <td><a href="http://packetstormsecurity.com/files/165214/Microsoft-Office-Word-MSHTML-Remote-Code-Execution.html">Microsoft Office Word MSHTML Remote Code Execution</a></td>
+                        </tr>
+                        <tr>
+                            <td>MISC</td>
+                            <td><a href="http://packetstormsecurity.com/files/167317/Microsoft-Office-MSDT-Follina-Proof-Of-Concept.html">Microsoft Office MSDT Follina Proof Of Concept</a></td>
+                            <td>None</td>
+                            <td>Exploit, Third Party Advisory, VDB Entry</td>
+                            <td><a href="http://packetstormsecurity.com/files/167317/Microsoft-Office-MSDT-Follina-Proof-Of-Concept.html">Microsoft Office MSDT Follina Proof Of Concept</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </otx-ioc-associated-files>
+    </div>
+    <div _ngcontent-rtf-c262="" id="references" class="section" bis_skin_checked="1">
+        <otx-references-table _ngcontent-rtf-c262="" _nghost-rtf-c261=""></otx-references-table>
+    </div>
+</otx-cve-analysis-tab>
+
+        
+
+</div></div>
+    </div>
+    <div class="container"><div class="row">
+    <div class="row">
+        <h2 class="section-heading">Exploits</h2>
+        <div class="table-responsive ">
+            <table id="exploitTable" class="table table-bordered table-striped w-100">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Author</th>
+                        <th>CVE</th>
+                        <th>Description</th>
+                        <th>URL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><a href="http://exploitlist.immunityinc.com/home/exploitpack/office_mshtml_activex/office_mshtml_activex" target="_blank">office_mshtml_activex</a></td>
+                        <td>CANVAS</td>
+                        <td>CVE-2021-40444</td>
+                        <td>office_mshtml_activex</td>
+                        <td><a href="http://exploitlist.immunityinc.com/home/exploitpack/office_mshtml_activex/office_mshtml_activex" target="_blank">View</a></td>
+                    </tr>
+                    <tr>
+                        <td><a href="http://exploitlist.immunityinc.com/home/exploitpack/office_mshtml_activex/office_mshtml_activex" target="_blank">office_mshtml_activex</a></td>
+                        <td>CANVAS</td>
+                        <td>CVE-2021-40444</td>
+                        <td>office_mshtml_activex</td>
+                        <td><a href="http://exploitlist.immunityinc.com/home/exploitpack/office_mshtml_activex/office_mshtml_activex" target="_blank">View</a></td>
+                    </tr>
+                    <!-- Add more rows here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</div>
+    <div class="container"><div class="row">
+    <div class="row">
+        <h2 class="section-heading col-12">Targeted Products</h2>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>CPE Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>cpe:2.3:o:microsoft:windows_server_2008:r2:sp1:*:*:*:*:x64</td></tr>
+                    <tr><td>cpe:2.3:o:microsoft:windows_8.1:-</td></tr>
+                    <tr><td>cpe:2.3:o:microsoft:windows_server_2008:-:sp2</td></tr>
+                    <tr><td>cpe:2.3:o:microsoft:windows_7:-:sp1</td></tr>
+                    <tr><td>cpe:2.3:o:microsoft:windows_rt_8.1:-</td></tr>
+                    <tr><td>cpe:2.3:o:microsoft:windows_server_2012:-</td></tr>
+                    <tr><td>cpe:2.3:o:microsoft:windows_server_2012:-:r2</td></tr>
+                    <tr><td>cpe:2.3:o:microsoft:windows_server_2022</td></tr>
+                    <tr><td>cpe:2.3:o:microsoft:windows_10_1809</td></tr>
+                    <tr><td>cpe:2.3:o:microsoft:windows_10_1909</td></tr>
+                    <tr><td>cpe:2.3:o:microsoft:windows_10_21h1</td></tr>
+                    <tr><td>cpe:2.3:o:microsoft:windows_10_2004</td></tr>
+                    <tr><td>cpe:2.3:o:microsoft:windows_server_2004</td></tr>
+                    <tr><td>cpe:2.3:o:microsoft:windows_10_20h2</td></tr>
+                    <tr><td>cpe:2.3:o:microsoft:windows_server_20h2</td></tr>
+                    <tr><td>cpe:2.3:o:microsoft:windows_10_1507</td></tr>
+                    <tr><td>cpe:2.3:o:microsoft:windows_10_1607</td></tr>
+                    <tr><td>cpe:2.3:o:microsoft:windows_server_2016</td></tr>
+                    <tr><td>cpe:2.3:o:microsoft:windows_server_2019</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div></div>
+    <div class="container"><div class="row">
+<div class="col-md-12 no-margin no-padding row">
+    <h2 id="products-header" class="section-heading col-12">Targeted Products</h2>
+
+    <table class="table   table-dark table-striped">
+        <thead>
+            <tr>
+                <th>CPE 2.3 URI</th>
+                <th>Version End Excluding</th>
+                <th>Vulnerable</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>cpe:2.3:o:microsoft:windows_server_2008:r2:sp1:*:*:*:*:x64:*</td>
+                <td>N/A</td>
+                <td>True</td>
+            </tr>
+            <tr>
+                <td>cpe:2.3:o:microsoft:windows_8.1:-:*:*:*:*:*:*:*</td>
+                <td>N/A</td>
+                <td>True</td>
+            </tr>
+            <tr>
+                <td>cpe:2.3:o:microsoft:windows_server_2008:-:sp2:*:*:*:*:*:*</td>
+                <td>N/A</td>
+                <td>True</td>
+            </tr>
+            <tr>
+                <td>cpe:2.3:o:microsoft:windows_7:-:sp1:*:*:*:*:*:*</td>
+                <td>N/A</td>
+                <td>True</td>
+            </tr>
+            <tr>
+                <td>cpe:2.3:o:microsoft:windows_rt_8.1:-:*:*:*:*:*:*</td>
+                <td>N/A</td>
+                <td>True</td>
+            </tr>
+            <tr>
+                <td>cpe:2.3:o:microsoft:windows_server_2012:-:*:*:*:*:*:*</td>
+                <td>N/A</td>
+                <td>True</td>
+            </tr>
+            <tr>
+                <td>cpe:2.3:o:microsoft:windows_server_2012:-:r2:*:*:*:*:*:*</td>
+                <td>N/A</td>
+                <td>True</td>
+            </tr>
+            <tr>
+                <td>cpe:2.3:o:microsoft:windows_server_2022:*:*:*:*:*:*:*</td>
+                <td>10.0.20348.230</td>
+                <td>True</td>
+            </tr>
+            <tr>
+                <td>cpe:2.3:o:microsoft:windows_10_1809:*:*:*:*:*:*:*</td>
+                <td>10.0.17763.2183</td>
+                <td>True</td>
+            </tr>
+            <tr>
+                <td>cpe:2.3:o:microsoft:windows_10_1909:*:*:*:*:*:*:*</td>
+                <td>10.0.18363.1801</td>
+                <td>True</td>
+            </tr>
+            <tr>
+                <td>cpe:2.3:o:microsoft:windows_10_21h1:*:*:*:*:*:*:*</td>
+                <td>10.0.19043.1237</td>
+                <td>True</td>
+            </tr>
+            <tr>
+                <td>cpe:2.3:o:microsoft:windows_10_2004:*:*:*:*:*:*:*</td>
+                <td>10.0.19041.1237</td>
+                <td>True</td>
+            </tr>
+            <tr>
+                <td>cpe:2.3:o:microsoft:windows_server_2004:*:*:*:*:*:*:*</td>
+                <td>10.0.19041.1237</td>
+                <td>True</td>
+            </tr>
+            <tr>
+                <td>cpe:2.3:o:microsoft:windows_10_20h2:*:*:*:*:*:*:*</td>
+                <td>10.0.19042.1237</td>
+                <td>True</td>
+            </tr>
+            <tr>
+                <td>cpe:2.3:o:microsoft:windows_server_20h2:*:*:*:*:*:*:*</td>
+                <td>10.0.19042.1237</td>
+                <td>True</td>
+            </tr>
+            <tr>
+                <td>cpe:2.3:o:microsoft:windows_10_1507:*:*:*:*:*:*:*</td>
+                <td>10.0.10240.19060</td>
+                <td>True</td>
+            </tr>
+            <tr>
+                <td>cpe:2.3:o:microsoft:windows_10_1607:*:*:*:*:*:*:*</td>
+                <td>10.0.14393.4651</td>
+                <td>True</td>
+            </tr>
+            <tr>
+                <td>cpe:2.3:o:microsoft:windows_server_2016:*:*:*:*:*:*:*</td>
+                <td>10.0.14393.4651</td>
+                <td>True</td>
+            </tr>
+            <tr>
+                <td>cpe:2.3:o:microsoft:windows_server_2019:*:*:*:*:*:*:*</td>
+                <td>10.0.17763.2183</td>
+                <td>True</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+</div></div>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+</body>
+
+</html>
