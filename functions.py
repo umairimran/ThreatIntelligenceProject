@@ -149,7 +149,7 @@ def get_indicators(modified_date, indicator_type):
     indicators_full_details_list = []
 
         # Fetch all indicators modified since the provided date
-    indicators = otx_object.get_all_indicators(indicator_types=[(get_indicator_type(indicator_type))], modified_since=modified_date)
+    indicators = otx_object.get_all_indicators(indicator_types=indicator_type, modified_since=modified_date)
     
     indicator_list=list(indicators)
     for each in indicator_list:

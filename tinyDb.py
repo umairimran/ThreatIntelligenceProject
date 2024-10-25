@@ -23,7 +23,26 @@ def insert_indicators_in_table(modified_date, indicator_type):
     None
     """
     # Retrieve full details of indicators based on the modified date and type
-    indicators_full_details = get_indicators(modified_date, indicator_type)
+    indicator_types = [
+    IPv4,
+    IPv6,
+    DOMAIN,
+    HOSTNAME,
+    EMAIL,
+    URL,
+    URI,
+    # Uncomment if needed
+    # FILE_HASH_MD5,
+    # FILE_HASH_SHA1,
+    # FILE_HASH_SHA256,
+    # FILE_HASH_PEHASH,
+    # FILE_HASH_IMPHASH,
+    CIDR,
+    FILE_PATH,
+    MUTEX,
+    CVE
+]
+    indicators_full_details = get_indicators(modified_date, indicator_types)
 
     # Get all existing indicators from the database
     found_indicators_in_database = indicators_table.all()
@@ -50,32 +69,36 @@ def insert_indicators_in_table(modified_date, indicator_type):
 
 def search_for_indicator(query):
     """
-    Searches for an indicator in the database based on a query.
+    Searches for an indicator in the database based on multiple terms in the query.
 
     Parameters:
-    query (str): The query to search for in the database.
+    query (str): The query to search for, containing multiple terms.
 
     Returns:
-    list: A list of dictionaries containing the search results. in raw form 
+    list: A list of dictionaries containing the search results.
     """
-
-    
-    pattern = re.compile(query, re.IGNORECASE)  # Case-insensitive regex pattern
+    terms = query.split()  # Split the query into individual terms
+    patterns = [re.compile(term, re.IGNORECASE) for term in terms]  # Create a regex for each term
     results = []
- 
-    for doc in indicators_table.all():
 
-        df=json_normalize(doc)
+    for doc in indicators_table.all():
+        # Normalize JSON data for easier access
+        df = json_normalize(doc)
         
         try:
             description = df['general.description'][0]
-            products=df['general.products'][0]
-            print(products)
+            products = df['general.products'][0]  # Assuming this is a list of product identifiers
         except KeyError:
             description = ''
-        # Check if the pattern matches the description field
-        if pattern.search(str(description)):
+            products = []
+        
+        # Check if any pattern matches either in the description or across products
+        description_match = any(pattern.search(str(description)) for pattern in patterns)
+        products_match = any(any(pattern.search(str(product)) for pattern in patterns) for product in products)
+
+        if description_match or products_match:
             results.append(doc)
+
     return results
 
 def get_cleaned_indicator_data_from_database(query):
@@ -103,4 +126,6 @@ def refresh():
     Returns:
     None
     """
-    insert_indicators_in_table((datetime.now() - timedelta(days=1)).date(), 'CVE')
+    insert_indicators_in_table((datetime.now() - timedelta(days=10)).date(), 'IPv4')
+
+refresh()

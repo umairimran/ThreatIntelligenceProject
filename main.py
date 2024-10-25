@@ -25,27 +25,32 @@ users = retrieve_users()
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
         
-        print(username, password)
-        
         # Create a dictionary for easy user lookup
-        user_dict = {user[1]: user[2] for user in users}  # user[1] is username, user[2] is password
+        user_dict = {user[1]: {'password': user[2], 'email': user[3], 'system': user[4], 'service': user[5], 'indicator': user[6]} for user in users}
         
-        print(user_dict)  # Debug print to check user credentials
-
         # Validate credentials
-        if username in user_dict and user_dict[username] == password:
-            session['username'] = username  # Store username in session
+        if username in user_dict and user_dict[username]['password'] == password:
+            # Store user data in session after a successful login
+            session['username'] = username  
+            session['system'] = user_dict[username]['system']
+            session['service'] = user_dict[username]['service']
+            session['indicator'] = user_dict[username]['indicator']
             flash('Login successful!', 'success')
             return redirect(url_for('search_indicators'))  # Redirect to the search indicators page
         else:
             flash('Invalid username or password. Please try again.', 'danger')
 
     return render_template('login.html')  # Render login form if GET request
+@app.route('/logout')
+def logout():
+    # Clear the session to log out the user
+    session.clear()
+    flash('You have been logged out successfully.', 'info')
+    return redirect(url_for('login')) 
 @app.route('/')
 def index():
     global clear_session_flag
@@ -282,13 +287,20 @@ def cve_page():
 
 @app.route("/search_indicators", methods=['GET', 'POST'])
 def search_indicators():
-    query = ""
+    
 
     if request.method == 'GET':
         # Fetch user settings and show relevant indicators based on those settings
         # Placeholder: get user settings from database (not implemented)
         # Example: user_settings = get_user_settings(user_id)
-        query = ""  # Query might be based on user preferences
+        username=session['username']
+        users=retrieve_users()
+        user_dict = {user[1]: {'password': user[2], 'email': user[3], 'system': user[4], 'service': user[5], 'indicator': user[6]} for user in users}
+        session['system'] = user_dict[username]['system']
+        session['service'] = user_dict[username]['service']
+        session['indicator'] = user_dict[username]['indicator']
+        query = " ".join([session['system'], session['service'], session['indicator']])
+        print("Getting of :",query)  # Query might be based on user preferences
 
     if request.method == 'POST':
         # Get the search query from the search form
@@ -401,5 +413,67 @@ def create_user_endpoint():
     add_user(username, password, email, system, service, indicator)
 
     return redirect(url_for('manage_users'))
+
+@app.route('/search_urls')
+def search_urls():
+    if request.method=="GET":
+        pass
+    if request.method=="POST":
+        pass
+    return render_template('search_urls.html')  # Create this template
+
+@app.route('/url_full_detail')
+def url_full_detail():
+    if request.method=="GET":
+        pass
+    if request.method=="POST":
+        pass
+    return render_template('url_full_detail.html')
+
+@app.route('/search_domains')
+def search_domains():
+    if request.method=="GET":
+        pass
+    if request.method=="POST":
+        pass
+    return render_template('search_domains.html')  # Create this template
+
+@app.route('/domain_full_detail')
+def domain_full_detail():
+    if request.method=="GET":
+        pass
+    if request.method=="POST":
+        pass
+    return render_template('domain_full_detail.html')
+
+@app.route('/search_ip4')
+def search_ip4():
+    if request.method=="GET":
+        pass
+    if request.method=="POST":
+        pass
+    return render_template('search_ip4.html')  # Create this template
+@app.route('/ip4_full_detail')
+def ip4_full_detail():
+    if request.method=="GET":
+        pass
+    if request.method=="POST":
+        pass
+    return render_template('ip4_full_detail.html')
+
+@app.route('/search_hostnames')
+def search_hostnames():
+    if request.method=="GET":
+        pass
+    if request.method=="POST":
+        pass
+    return render_template('search_hostnames.html')  # Create this template
+@app.route('/hostname_full_detail')
+def hostname_full_detail():
+    if request.method=="GET":
+        pass
+    if request.method=="POST":
+        pass
+    return render_template('hostname_full_detail.html')
 if __name__ == '__main__':
     app.run(port=5500)
