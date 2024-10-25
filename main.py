@@ -4,6 +4,7 @@ from flask import request
 from flask import redirect
 from flask import render_template
 import os
+from admin import *
 from flask_caching import Cache
 # Configure the cache
 
@@ -12,60 +13,50 @@ from flask import Flask, render_template, request, redirect, flash, session
 from flask import session
 from functions import *
 from tinyDb import *
+
 app=Flask(__name__)
+# Flag to control session clearing
+clear_session_flag = True
 cache = Cache(app, config={'CACHE_TYPE': 'simple'})
 app.secret_key = '123456789'
 # Create the users table when the app starts
+users = retrieve_users() 
 
-create_users_table()
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
 
-@cache.cached(timeout=300, query_string=True)  # Cache for 5 minutes
-def get_cached_indicators(query):
-    return get_cleaned_indicator_data_from_database(query)
-
-@app.route('/signup', methods=['GET', 'POST'])
-def signup_route():
     if request.method == 'POST':
         username = request.form['username']
-        email = request.form['email']
         password = request.form['password']
-        designation = request.form['designation']
-        signup(username, email, password, designation)  # Call signup function
-        return redirect(url_for('login'))  # Redirect to login page after signup
+        
+        print(username, password)
+        
+        # Create a dictionary for easy user lookup
+        user_dict = {user[1]: user[2] for user in users}  # user[1] is username, user[2] is password
+        
+        print(user_dict)  # Debug print to check user credentials
 
-    return render_template('signup.html')  # Render signup page if GET request
-@app.route('/login', methods=['GET', 'POST'])
-def login_route():
-    if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
-        user = login(email, password)
+        # Validate credentials
+        if username in user_dict and user_dict[username] == password:
+            session['username'] = username  # Store username in session
+            flash('Login successful!', 'success')
+            return redirect(url_for('search_indicators'))  # Redirect to the search indicators page
+        else:
+            flash('Invalid username or password. Please try again.', 'danger')
 
-        if user:
-            session['user_id'] = user['id']  # Store user ID in session
-            return redirect(url_for('search_indicators'))
-   
-    return render_template('login.html')  # Render login template on GET or unsuccessful login
-
-@app.route('/logout')
-def logout():
-    session.pop('user_id', None)  # Remove user ID from session
-    session.pop('username', None)  # Optionally remove username
-    flash('You have been logged out.', 'success')
-    return redirect('/login')  # Redirect to login page after logout
-
-def is_logged_in():
-    return 'user_id' in session
-
-def get_default_pulses():
-    # Return default pulses data for initial page load
-    pass
-
+    return render_template('login.html')  # Render login form if GET request
 @app.route('/')
 def index():
-    return redirect(url_for('search_indicators'))
-
+    global clear_session_flag
+    if  clear_session_flag:
+        session.clear()
+        clear_session_flag=False
+    if 'username' in session:  # Check if the user is logged in
+        print("Logged in")
+        return redirect(url_for('search_indicators'))  # Redirect to search_indicators if logged in
+    else:
+        return redirect(url_for('login'))  # Redirect to login if not logged in
 @app.route('/pulses',methods=['GET','POST'])
 def pulses():
     if request.method == 'POST':
@@ -332,11 +323,83 @@ def search_indicators():
 def test():
     return render_template('indicators.html')
 
-
 @app.route('/refresh_database',methods=['GET','POST'])
 def refresh_database():
     if request.method == 'POST':
         refresh()
         return redirect(url_for('search_indicators'))
+
+
+
+@app.route('/admin',methods=['GET','POST'])
+def admin_page():
+    if request.method=='GET':
+        return render_template('admin_dashboard.html')
+
+@app.route('/manage_users', methods=['GET', 'POST'])
+def manage_users():
+    if request.method == 'GET':
+        users = retrieve_users() 
+    
+        return render_template('manage_users.html', users=users)  # Pass users to the template
+
+
+@app.route('/edit_user', methods=['POST'])
+def edit_user_endpoint():
+    """Endpoint to edit user details."""
+    # Get data from the form
+    user_id = request.form.get('user_id')
+    username = request.form.get('username')
+    password = request.form.get('password')
+    email = request.form.get('email')
+    system = request.form.get('system')
+    service = request.form.get('service')
+    indicator = request.form.get('indicator')
+
+    # Check for empty fields and handle accordingly
+    if not username or not password or not email or not system or not service or not indicator:
+        return "All fields are required.", 400  # Return an error message if any fields are empty
+
+    print(f"Editing user with ID: {user_id}")
+    print(f"New details: {username}, {password}, {email}, {system}, {service}, {indicator}")
+
+    # Call the edit_user function
+    edit_user(user_id, username, password, email, system, service, indicator)
+
+      # Return a success message
+
+    # Redirect or return a success message
+    return redirect(url_for('manage_users'))
+
+@app.route('/delete_user', methods=['POST'])
+def delete_user_endpoint():
+    """Endpoint to delete a user."""
+    # Call the delete_user function
+    user_id = request.form.get('user_id')
+    print(f"Deleting user with ID: {user_id}")
+    delete_user(user_id)
+
+    # Redirect or return a success message
+    return redirect(url_for('manage_users'))
+
+@app.route('/create_new_user', methods=['POST'])
+def create_user_endpoint():
+    """Endpoint to create a new user."""
+    # Get data from the form
+    username = request.form.get('username')
+    password = request.form.get('password')
+    email = request.form.get('email')
+    system = request.form.get('system')
+    service = request.form.get('service')
+    indicator = request.form.get('indicator')
+
+    # Check for required fields
+    if not username or not email or not password or not system or not service or not indicator:
+        return redirect(url_for('manage_users'))  # Return an error if required fields are empty
+
+    # Call the create_user function
+    add_user(username, password, email, system, service, indicator)
+
+    return redirect(url_for('manage_users'))
 if __name__ == '__main__':
     app.run(port=5500)

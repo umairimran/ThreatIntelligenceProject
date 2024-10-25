@@ -1,6 +1,8 @@
 from tinydb import *
 from functions import *
 from OTXv2 import *
+from admin import * 
+from flask import session
 from datetime import datetime, timedelta
 db = TinyDB('db.json')
 indicators_table = db.table('indicators')
@@ -56,15 +58,29 @@ def search_for_indicator(query):
     Returns:
     list: A list of dictionaries containing the search results. in raw form 
     """
-
+    username=session['username']
+    print("Here in the search for indicator :",username)
+    users=retrieve_users()
+    user_dict = {user[1]: {'password': user[2], 'email': user[3], 'system': user[4], 'service': user[5], 'indicator': user[6]} for user in users}
+        
+    if username in user_dict:
+            user_data = user_dict[username]
+            system = user_data['system']
+            service = user_data['service']
+            indicator = user_data['indicator']
+            print("User details in search for indicator:", system, service, indicator)
+    
     pattern = re.compile(query, re.IGNORECASE)  # Case-insensitive regex pattern
     results = []
  
     for doc in indicators_table.all():
 
         df=json_normalize(doc)
+        
         try:
             description = df['general.description'][0]
+            products=df['general.products'][0]
+            print(products)
         except KeyError:
             description = ''
         # Check if the pattern matches the description field
