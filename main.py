@@ -300,7 +300,7 @@ def search_indicators():
     # Fetch indicators from cache or database based on query
     indicators_df = get_cleaned_indicator_data_from_database(query)
     indicators_list = []
-    indicators_df=indicators_df.head(100)
+    indicators_df=indicators_df
     # Check if DataFrame is not empty or null
     if indicators_df is not None and not indicators_df.empty:
         # Iterate through each row in the DataFrame
