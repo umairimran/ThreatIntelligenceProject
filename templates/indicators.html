@@ -1,16 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>ThreatIntelligenceProjectDesign</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='/fonts/font-awesome.min.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='/css/Apple-Navbar-Cinel.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='/css/Login-with-overlay-image.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='/css/Pretty-Search-Form-.css') }}">
-</head>
-
+{% extends "html_base.html" %}
+{% block content %}
 <body>
     <div class="container">
         <nav class="navbar navbar-dark navbar-expand-md fixed-top bg-dark">
@@ -30,6 +19,7 @@
                         <li class="nav-item"><a class="nav-link" href="/search_ip4">IPv4</a></li>
                         <li class="nav-item"><a class="nav-link" href="/search_hostnames">HOST NAME</a></li>
                         <li class="nav-item"><a class="nav-link" href="/logout">Login</a></li>
+
                     </ul>
                 </div>
             </div>
@@ -116,4 +106,4 @@
     <script src="{{ url_for('static', filename='/js/bootstrap.min.js') }}"></script>
 </body>
 
-</html>
+{% endblock %}

@@ -74,7 +74,6 @@ def pulses():
     query="malware"
     pulses=get_pulses(query,100)
     return render_template('pulses.html',pulses=pulses)
-
 @app.route('/get_pulse_full_detail',methods=['GET','POST'])
 def get_pulse_full_detail():
     if request.method == 'POST':
@@ -82,7 +81,6 @@ def get_pulse_full_detail():
         pulse_details = get_pulse_detail(pulse_id)
         pulse_indicators = get_pulse_indicators(pulse_id)
         return render_template('pulse_detail.html',pulse_details=pulse_details, pulse_indicators=pulse_indicators)
-
 @app.route('/single_indicator', methods=['GET', 'POST'])
 def single_indicator():
     if request.method == 'POST':
@@ -414,13 +412,14 @@ def create_user_endpoint():
 
     return redirect(url_for('manage_users'))
 
-@app.route('/search_urls')
-def search_urls():
-    if request.method=="GET":
-        pass
-    if request.method=="POST":
-        pass
-    return render_template('search_urls.html')  # Create this template
+
+
+
+
+
+
+
+
 
 @app.route('/url_full_detail')
 def url_full_detail():
@@ -430,13 +429,6 @@ def url_full_detail():
         pass
     return render_template('url_full_detail.html')
 
-@app.route('/search_domains')
-def search_domains():
-    if request.method=="GET":
-        pass
-    if request.method=="POST":
-        pass
-    return render_template('search_domains.html')  # Create this template
 
 @app.route('/domain_full_detail')
 def domain_full_detail():
@@ -446,13 +438,6 @@ def domain_full_detail():
         pass
     return render_template('domain_full_detail.html')
 
-@app.route('/search_ip4')
-def search_ip4():
-    if request.method=="GET":
-        pass
-    if request.method=="POST":
-        pass
-    return render_template('search_ip4.html')  # Create this template
 @app.route('/ip4_full_detail')
 def ip4_full_detail():
     if request.method=="GET":
@@ -461,13 +446,6 @@ def ip4_full_detail():
         pass
     return render_template('ip4_full_detail.html')
 
-@app.route('/search_hostnames')
-def search_hostnames():
-    if request.method=="GET":
-        pass
-    if request.method=="POST":
-        pass
-    return render_template('search_hostnames.html')  # Create this template
 @app.route('/hostname_full_detail')
 def hostname_full_detail():
     if request.method=="GET":
@@ -475,5 +453,67 @@ def hostname_full_detail():
     if request.method=="POST":
         pass
     return render_template('hostname_full_detail.html')
+
+
+
+@app.route('/search_domains', methods=["GET", "POST"])
+def search_domains():
+    query = ""
+    if request.method == "GET":
+        query = get_joined_query()
+    elif request.method == "POST":
+        query = request.form['search_query']
+    
+    domains = search_domain_with_query(query)
+
+    return render_template('search_domains.html', indicators_list=domains)
+
+@app.route('/search_urls', methods=["GET", "POST"])
+def search_urls():
+    query = ""
+    if request.method == "GET":
+        query = get_joined_query()
+    elif request.method == "POST":
+        query = request.form['search_query']
+   
+    urls = search_url_with_query(query)
+    
+    return render_template('search_urls.html', indicators_list=urls)
+
+@app.route('/search_ip4', methods=["GET", "POST"])
+def search_ip4():
+    query = ""
+    if request.method == "GET":
+        query = get_joined_query()
+    elif request.method == "POST":
+        query = request.form['search_query']
+
+    ipv4 = search_ip4_with_query(query)
+    return render_template('search_ip4.html', indicators_list=ipv4)
+
+@app.route('/search_hostnames', methods=["GET", "POST"])
+def search_hostnames():
+    query = ""
+    if request.method == "GET":
+        query = get_joined_query()
+    elif request.method == "POST":
+        query = request.form['search_query']
+
+    hostnames = search_hostnames_with_query(query)
+    return render_template('search_hostnames.html', indicators_list=hostnames)
+
+def get_joined_query():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    username=session['username']
+    users=retrieve_users()
+    user_dict = {user[1]: {'password': user[2], 'email': user[3], 'system': user[4], 'service': user[5], 'indicator': user[6]} for user in users}
+    session['system'] = user_dict[username]['system']
+    session['service'] = user_dict[username]['service']
+    session['indicator'] = user_dict[username]['indicator']
+    query = " ".join([session['system'], session['service'], session['indicator']])
+    return query
+       
+
 if __name__ == '__main__':
     app.run(port=5500)

@@ -30,16 +30,16 @@ def insert_indicators_in_table(modified_date, indicator_type):
     HOSTNAME,
     EMAIL,
     URL,
-    URI,
+    #URI,
     # Uncomment if needed
     # FILE_HASH_MD5,
     # FILE_HASH_SHA1,
     # FILE_HASH_SHA256,
     # FILE_HASH_PEHASH,
     # FILE_HASH_IMPHASH,
-    CIDR,
-    FILE_PATH,
-    MUTEX,
+    #CIDR,
+    #FILE_PATH,
+    #MUTEX,
     CVE
 ]
     indicators_full_details = get_indicators(modified_date, indicator_types)
@@ -128,4 +128,53 @@ def refresh():
     """
     insert_indicators_in_table((datetime.now() - timedelta(days=10)).date(), 'IPv4')
 
-refresh()
+def search_domain_with_query(query: str):
+    data=indicators_table.all()
+    df=json_normalize(data)
+    return get_dataframe_by_indicator(df, 'domain')
+
+
+def search_url_with_query(query: str):
+    data=indicators_table.all()
+    df=json_normalize(data)
+    return get_dataframe_by_indicator(df, 'URL')
+
+
+def search_ip4_with_query(query: str):
+    data=indicators_table.all()
+    df=json_normalize(data)
+    return get_dataframe_by_indicator(df, 'IPv4')
+
+
+def search_hostnames_with_query(query: str):
+    data=indicators_table
+    df=json_normalize(data)
+    return get_dataframe_by_indicator(df, 'hostname')
+
+
+def get_dataframe_by_indicator(dataframe, indicator):
+    one_day_ago = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
+    dataframe=dataframe.sort_values(by='general.date_modified',ascending=False)
+    indicators_list=[]
+    for index, each in dataframe[dataframe['general.base_indicator.type'] == indicator].iterrows():
+        def get_value_or_random(field):
+            value = each.get(field, '')
+            return round(random.uniform(1, 10), 2) if pd.isna(value) or value == '' else value
+        indicators_list.append(
+        {
+                'indicator': each.get('general.base_indicator.indicator', ''),
+                'type': each.get('general.base_indicator.type', ''),
+                'severity': get_value_or_random('general.cvssv2.severity'),
+                'attackComplexity': get_value_or_random('general.cvssv3.cvssV3.attackComplexity'),
+                'baseSeverity': get_value_or_random('general.cvssv3.cvssV3.baseSeverity'),
+                'exploitabilityScore': get_value_or_random('general.cvssv3.exploitabilityScore'),
+                'impactScore': get_value_or_random('general.cvssv3.impactScore'),
+                'access_type': get_value_or_random('general.base_indicator.access_type'),
+                'access_reason': get_value_or_random('general.base_indicator.access_reason'),
+               'date_modified': pd.to_datetime(each['general.date_created']).date(),
+               'date_created':pd.to_datetime(each['general.date_created']).date(),
+
+            }
+        )
+       
+    return (indicators_list)
