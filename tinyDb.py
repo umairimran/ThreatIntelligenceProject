@@ -24,48 +24,44 @@ def insert_indicators_in_table(modified_date, indicator_type):
     """
     # Retrieve full details of indicators based on the modified date and type
     indicator_types = [
-    IPv4,
-    IPv6,
-    DOMAIN,
-    HOSTNAME,
-    EMAIL,
-    URL,
-    #URI,
-    # Uncomment if needed
-    # FILE_HASH_MD5,
-    # FILE_HASH_SHA1,
-    # FILE_HASH_SHA256,
-    # FILE_HASH_PEHASH,
-    # FILE_HASH_IMPHASH,
-    #CIDR,
-    #FILE_PATH,
-    #MUTEX,
-    CVE
-]
-    indicators_full_details = get_indicators(modified_date, indicator_types)
+        DOMAIN,
+        HOSTNAME,
+        URL,
+        IPv4,
+        CVE
+    ]
+    
+    for each in indicator_types:
+        indicators_full_details = get_indicators(modified_date, [each])
 
-    # Get all existing indicators from the database
-    found_indicators_in_database = indicators_table.all()
-    indicators_found_in_database = []
+        # Get all existing indicators from the database
+        found_indicators_in_database = indicators_table.all()
+        indicators_found_in_database = []
 
-    # Collect indicators that are currently in the database
-    for each in found_indicators_in_database:
-        indicators_found_in_database.append(json_normalize(each)['general.base_indicator.indicator'][0])
+        # Collect indicators that are currently in the database
+        for each in found_indicators_in_database:
+            try:
+                indicators_found_in_database.append(json_normalize(each)['general.base_indicator.indicator'][0])
+            except (KeyError, IndexError) as e:
+                # Log the error or handle it accordingly, but continue processing
+                print(f"Error processing existing indicator: {e}")
 
-
-
-    # Loop through the retrieved indicators to check for insertion
-    for indicator in indicators_full_details:
-        ind = json_normalize(indicator)['general.base_indicator.indicator'][0]
-        
-        # Check if the indicator is already in the database
-        if ind not in indicators_found_in_database:
-            # Insert the new indicator into the database
-            indicators_table.insert(indicator)
-            print('Indicator inserted in database')
-        else:
-            # Indicate that the indicator already exists
-            print('Indicator already exists in database')
+        # Loop through the retrieved indicators to check for insertion
+        for indicator in indicators_full_details:
+            try:
+                ind = json_normalize(indicator)['general.base_indicator.indicator'][0]
+                
+                # Check if the indicator is already in the database
+                if ind not in indicators_found_in_database:
+                    # Insert the new indicator into the database
+                    indicators_table.insert(indicator)
+                    print('Indicator inserted in database')
+                else:
+                    # Indicate that the indicator already exists
+                    print('Indicator already exists in database')
+            except (KeyError, IndexError) as e:
+                # Log the error or handle it accordingly, but continue processing
+                print(f"Error processing indicator: {e}")
 
 def search_for_indicator(query):
     """
@@ -126,7 +122,7 @@ def refresh():
     Returns:
     None
     """
-    insert_indicators_in_table((datetime.now() - timedelta(days=10)).date(), 'IPv4')
+    insert_indicators_in_table((datetime.now() - timedelta(days=1)).date(), 'IPv4')
 
 def search_domain_with_query(query: str):
     data=indicators_table.all()
@@ -178,3 +174,5 @@ def get_dataframe_by_indicator(dataframe, indicator):
         )
        
     return (indicators_list)
+
+

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Full Detail</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">URL Full Detail</h1>
+
+        <h3>General Information</h3>
+        <ul class="list-group mb-4">
+            <li class="list-group-item"><strong>Sections:</strong> {{ general_sections }}</li>
+            <li class="list-group-item"><strong>Indicator:</strong> {{ general_indicator }}</li>
+            <li class="list-group-item"><strong>Type Title:</strong> {{ general_type_title }}</li>
+            <li class="list-group-item"><strong>Base Indicator ID:</strong> {{ general_base_indicator_id }}</li>
+            <li class="list-group-item"><strong>Pulse Info Count:</strong> {{ general_pulse_info_count }}</li>
+            <li class="list-group-item"><strong>Pulse Info Pulses:</strong> {{ general_pulse_info_pulses }}</li>
+            <li class="list-group-item"><strong>Pulse Info References:</strong> {{ general_pulse_info_references }}</li>
+            <li class="list-group-item"><strong>Related Malware Families:</strong> {{ general_pulse_info_related_alienvault_malware_families }}</li>
+            <li class="list-group-item"><strong>Related Industries:</strong> {{ general_pulse_info_related_alienvault_industries }}</li>
+            <li class="list-group-item"><strong>Related Other Adversaries:</strong> {{ general_pulse_info_related_other_adversary }}</li>
+            <li class="list-group-item"><strong>Related Other Malware Families:</strong> {{ general_pulse_info_related_other_malware_families }}</li>
+            <li class="list-group-item"><strong>Related Other Industries:</strong> {{ general_pulse_info_related_other_industries }}</li>
+            <li class="list-group-item"><strong>False Positive:</strong> {{ general_false_positive }}</li>
+            <li class="list-group-item"><strong>WHOIS:</strong> {{ general_whois }}</li>
+        </ul>
+
+        <h3>URL List Information</h3>
+        <ul class="list-group">
+            <li class="list-group-item"><strong>Net Location:</strong> {{ url_list_net_loc }}</li>
+            <li class="list-group-item"><strong>City Data:</strong> {{ url_list_city_data }}</li>
+            <li class="list-group-item"><strong>City:</strong> {{ url_list_city }}</li>
+            <li class="list-group-item"><strong>Region:</strong> {{ url_list_region }}</li>
+            <li class="list-group-item"><strong>Continent Code:</strong> {{ url_list_continent_code }}</li>
+            <li class="list-group-item"><strong>Country Code (3):</strong> {{ url_list_country_code3 }}</li>
+            <li class="list-group-item"><strong>Country Code (2):</strong> {{ url_list_country_code2 }}</li>
+            <li class="list-group-item"><strong>Subdivision:</strong> {{ url_list_subdivision }}</li>
+            <li class="list-group-item"><strong>Latitude:</strong> {{ url_list_latitude }}</li>
+            <li class="list-group-item"><strong>Postal Code:</strong> {{ url_list_postal_code }}</li>
+            <li class="list-group-item"><strong>Longitude:</strong> {{ url_list_longitude }}</li>
+            <li class="list-group-item"><strong>Accuracy Radius:</strong> {{ url_list_accuracy_radius }}</li>
+            <li class="list-group-item"><strong>Country Code:</strong> {{ url_list_country_code }}</li>
+            <li class="list-group-item"><strong>Country Name:</strong> {{ url_list_country_name }}</li>
+            <li class="list-group-item"><strong>DMA Code:</strong> {{ url_list_dma_code }}</li>
+            <li class="list-group-item"><strong>Charset:</strong> {{ url_list_charset }}</li>
+            <li class="list-group-item"><strong>Area Code:</strong> {{ url_list_area_code }}</li>
+            <li class="list-group-item"><strong>Flag Title:</strong> {{ url_list_flag_title }}</li>
+        </ul>
+        
+        <a href="/" class="btn btn-primary mt-4">Back to Home</a>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

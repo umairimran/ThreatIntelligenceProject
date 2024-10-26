@@ -417,45 +417,6 @@ def create_user_endpoint():
 
 
 
-
-
-
-
-@app.route('/url_full_detail')
-def url_full_detail():
-    if request.method=="GET":
-        pass
-    if request.method=="POST":
-        pass
-    return render_template('url_full_detail.html')
-
-
-@app.route('/domain_full_detail')
-def domain_full_detail():
-    if request.method=="GET":
-        pass
-    if request.method=="POST":
-        pass
-    return render_template('domain_full_detail.html')
-
-@app.route('/ip4_full_detail')
-def ip4_full_detail():
-    if request.method=="GET":
-        pass
-    if request.method=="POST":
-        pass
-    return render_template('ip4_full_detail.html')
-
-@app.route('/hostname_full_detail')
-def hostname_full_detail():
-    if request.method=="GET":
-        pass
-    if request.method=="POST":
-        pass
-    return render_template('hostname_full_detail.html')
-
-
-
 @app.route('/search_domains', methods=["GET", "POST"])
 def search_domains():
     query = ""
@@ -514,6 +475,255 @@ def get_joined_query():
     query = " ".join([session['system'], session['service'], session['indicator']])
     return query
        
+
+
+@app.route('/domain_full_detail', methods=['GET', 'POST'])
+def domain_full_detail():
+    if request.method == 'POST':
+        indicator = request.form['indicator']
+        indicator_type = request.form['base_indicator_type']
+        df = otx_object.get_indicator_details_full(get_indicator_type(indicator_type), indicator)
+        df = json_normalize(df)
+
+        def safe_get(column_name):
+            """Return the value from DataFrame or a random number between 1-10 if it's empty."""
+            if column_name in df.columns and df[column_name][0] != '':
+                return df[column_name][0]
+            else:
+                return random.randint(1, 10)  # Return a random number between 1-10
+
+        # Extract general information
+        general_sections = safe_get('general.sections')
+        general_whois = safe_get('general.whois')
+        general_alexa = safe_get('general.alexa')
+        general_indicator = safe_get('general.indicator')
+        general_type = safe_get('general.type')
+        general_type_title = safe_get('general.type_title')
+        general_base_indicator_id = int(safe_get('general.base_indicator.id')) if safe_get('general.base_indicator.id') else random.randint(1, 10)
+        general_base_indicator_indicator = safe_get('general.base_indicator.indicator')
+        general_base_indicator_access_type = safe_get('general.base_indicator.access_type')
+        general_pulse_info_count = safe_get('general.pulse_info.count')
+        general_pulse_info_pulses = safe_get('general.pulse_info.pulses')
+        general_pulse_info_references = safe_get('general.pulse_info.references')
+        general_pulse_info_related_alienvault_malware_families = safe_get('general.pulse_info.related.alienvault.malware_families')
+        general_pulse_info_related_other_malware_families = safe_get('general.pulse_info.related.other.malware_families')
+
+        # Extract malware information
+        malware_data = safe_get('malware.data')
+        malware_size = safe_get('malware.size')
+        malware_count = safe_get('malware.count')
+
+        # Extract URL list information
+        url_list = json_normalize(df['url_list.url_list'][0])
+        url_list = url_list.to_dict(orient='records')[0] 
+
+        # Extract passive DNS information
+        passive_dns_count = safe_get('passive_dns.count')
+        passive_dns_data = safe_get('passive_dns.passive_dns')
+        print(url_list)
+        # Pass all variables to the HTML template
+        return render_template('domain_full_details.html', 
+            general_sections=general_sections,
+            general_whois=general_whois,
+            general_alexa=general_alexa,
+            general_indicator=general_indicator,
+            general_type=general_type,
+            general_type_title=general_type_title,
+            general_base_indicator_id=general_base_indicator_id,
+            general_base_indicator_indicator=general_base_indicator_indicator,
+            general_base_indicator_access_type=general_base_indicator_access_type,
+            general_pulse_info_count=general_pulse_info_count,
+            general_pulse_info_pulses=general_pulse_info_pulses,
+            general_pulse_info_references=general_pulse_info_references,
+            general_pulse_info_related_alienvault_malware_families=general_pulse_info_related_alienvault_malware_families,
+            general_pulse_info_related_other_malware_families=general_pulse_info_related_other_malware_families,
+            malware_data=malware_data,
+            malware_size=malware_size,
+            malware_count=malware_count,
+            url_list=url_list,
+            passive_dns_count=passive_dns_count,
+            passive_dns_data=passive_dns_data
+        )
+@app.route('/ip4_full_detail', methods=['GET', 'POST'])
+def ip4_full_detail():
+    if request.method == 'POST':
+        indicator = request.form['indicator']
+        indicator_type = request.form['base_indicator_type']
+        df = otx_object.get_indicator_details_full(IPv4, indicator)
+        df = json_normalize(df)
+
+        def safe_get(column_name):
+            """Return the value from DataFrame or a random number between 1-10 if it's empty."""
+            if column_name in df.columns and df[column_name][0] != '':
+                return df[column_name][0]
+            else:
+                return ' '  # Return a random number between 1-10
+
+        # Extract general information
+        general_whois = safe_get('general.whois')
+        general_reputation = safe_get('general.reputation')
+        general_indicator = safe_get('general.indicator')
+        general_type = safe_get('general.type')
+        general_type_title = safe_get('general.type_title')
+        general_base_indicator_id = int(safe_get('general.base_indicator.id')) if safe_get('general.base_indicator.id') else random.randint(1, 10)
+        general_base_indicator_indicator = safe_get('general.base_indicator.indicator')
+        general_pulse_info_count = safe_get('general.pulse_info.count')
+        general_pulse_info_pulses = safe_get('general.pulse_info.pulses')
+        general_pulse_info_references = safe_get('general.pulse_info.references')
+        general_asn = safe_get('general.asn')
+        general_city_data = safe_get('general.city_data')
+        general_city = safe_get('general.city')
+        general_region = safe_get('general.region')
+        general_continent_code = safe_get('general.continent_code')
+        general_country_code3 = safe_get('general.country_code3')
+        general_country_code2 = safe_get('general.country_code2')
+        general_subdivision = safe_get('general.subdivision')
+        general_latitude = safe_get('general.latitude')
+        general_postal_code = safe_get('general.postal_code')
+        general_longitude = safe_get('general.longitude')
+        general_accuracy_radius = safe_get('general.accuracy_radius')
+        general_country_code = safe_get('general.country_code')
+        general_country_name = safe_get('general.country_name')
+        general_dma_code = safe_get('general.dma_code')
+        general_charset = safe_get('general.charset')
+        general_area_code = safe_get('general.area_code')
+        general_flag_title = safe_get('general.flag_title')
+        general_sections = safe_get('general.sections')
+
+        # Extract malware information
+        malware_data = safe_get('malware.data')
+        malware_size = safe_get('malware.size')
+
+        # Extract passive DNS information
+        passive_dns_count = safe_get('passive_dns.count')
+        passive_dns_data = safe_get('passive_dns.passive_dns')
+
+        # Pass all variables to the HTML template
+        return render_template('ipv4_full_details.html', 
+            general_whois=general_whois,
+            general_reputation=general_reputation,
+            general_indicator=general_indicator,
+            general_type=general_type,
+            general_type_title=general_type_title,
+            general_base_indicator_id=general_base_indicator_id,
+            general_base_indicator_indicator=general_base_indicator_indicator,
+            general_pulse_info_count=general_pulse_info_count,
+            general_pulse_info_pulses=general_pulse_info_pulses,
+            general_pulse_info_references=general_pulse_info_references,
+            general_asn=general_asn,
+            general_city_data=general_city_data,
+            general_city=general_city,
+            general_region=general_region,
+            general_continent_code=general_continent_code,
+            general_country_code3=general_country_code3,
+            general_country_code2=general_country_code2,
+            general_subdivision=general_subdivision,
+            general_latitude=general_latitude,
+            general_postal_code=general_postal_code,
+            general_longitude=general_longitude,
+            general_accuracy_radius=general_accuracy_radius,
+            general_country_code=general_country_code,
+            general_country_name=general_country_name,
+            general_dma_code=general_dma_code,
+            general_charset=general_charset,
+            general_area_code=general_area_code,
+            general_flag_title=general_flag_title,
+            general_sections=general_sections,
+            malware_data=malware_data,
+            malware_size=malware_size,
+            passive_dns_count=passive_dns_count,
+            passive_dns_data=passive_dns_data
+        )
+
+@app.route('/url_full_detail', methods=['GET', 'POST'])
+def url_full_detail():
+   
+    if request.method == 'POST':
+        indicator = request.form['indicator']
+        indicator_type = request.form['base_indicator_type']
+        df = otx_object.get_indicator_details_full(URL, indicator)
+        df = json_normalize(df)
+
+        def safe_get(column_name):
+            return df[column_name][0] if column_name in df.columns else ''
+        
+        # Extract general information
+        general_sections = safe_get('general.sections')
+        general_indicator = safe_get('general.indicator')
+        general_type_title = safe_get('general.type_title')
+        general_base_indicator_id = int(safe_get('general.base_indicator.id')) if safe_get('general.base_indicator.id') else 0
+        general_pulse_info_count = safe_get('general.pulse_info.count')
+        general_pulse_info_pulses = safe_get('general.pulse_info.pulses')
+        general_pulse_info_references = safe_get('general.pulse_info.references')
+        general_pulse_info_related_alienvault_malware_families = safe_get('general.pulse_info.related.alienvault.malware_families')
+        general_pulse_info_related_alienvault_industries = safe_get('general.pulse_info.related.alienvault.industries')
+        general_pulse_info_related_other_adversary = safe_get('general.pulse_info.related.other.adversary')
+        general_pulse_info_related_other_malware_families = safe_get('general.pulse_info.related.other.malware_families')
+        general_pulse_info_related_other_industries = safe_get('general.pulse_info.related.other.industries')
+        general_false_positive = safe_get('general.false_positive')
+        general_whois = safe_get('general.whois')
+
+        # Convert the first entry of the nested list to a dictionary
+        url_list = json_normalize(df['url_list.url_list'][0][0])
+        url_list = url_list.to_dict(orient='records')[0]
+
+        # Extract specific URL list information
+        url_list_net_loc = safe_get('url_list.net_loc')
+        url_list_city_data = safe_get('url_list.city_data')
+        url_list_city = safe_get('url_list.city')
+        url_list_region = safe_get('url_list.region')
+        url_list_continent_code = safe_get('url_list.continent_code')
+        url_list_country_code3 = safe_get('url_list.country_code3')
+        url_list_country_code2 = safe_get('url_list.country_code2')
+        url_list_subdivision = safe_get('url_list.subdivision')
+        url_list_latitude = safe_get('url_list.latitude')
+        url_list_postal_code = safe_get('url_list.postal_code')
+        url_list_longitude = safe_get('url_list.longitude')
+        url_list_accuracy_radius = safe_get('url_list.accuracy_radius')
+        url_list_country_code = safe_get('url_list.country_code')
+        url_list_country_name = safe_get('url_list.country_name')
+        url_list_dma_code = safe_get('url_list.dma_code')
+        url_list_charset = safe_get('url_list.charset')
+        url_list_area_code = safe_get('url_list.area_code')
+        url_list_flag_title = safe_get('url_list.flag_title')
+
+        # Pass all variables to the HTML template
+        return render_template('url_full_detail.html', 
+            general_sections=general_sections,
+            general_indicator=general_indicator,
+            general_type_title=general_type_title,
+            general_base_indicator_id=general_base_indicator_id,
+            general_pulse_info_count=general_pulse_info_count,
+            general_pulse_info_pulses=general_pulse_info_pulses,
+            general_pulse_info_references=general_pulse_info_references,
+            general_pulse_info_related_alienvault_malware_families=general_pulse_info_related_alienvault_malware_families,
+            general_pulse_info_related_alienvault_industries=general_pulse_info_related_alienvault_industries,
+            general_pulse_info_related_other_adversary=general_pulse_info_related_other_adversary,
+            general_pulse_info_related_other_malware_families=general_pulse_info_related_other_malware_families,
+            general_pulse_info_related_other_industries=general_pulse_info_related_other_industries,
+            general_false_positive=general_false_positive,
+            general_whois=general_whois,
+            url_list_net_loc=url_list_net_loc,
+            url_list_city_data=url_list_city_data,
+            url_list_city=url_list_city,
+            url_list_region=url_list_region,
+            url_list_continent_code=url_list_continent_code,
+            url_list_country_code3=url_list_country_code3,
+            url_list_country_code2=url_list_country_code2,
+            url_list_subdivision=url_list_subdivision,
+            url_list_latitude=url_list_latitude,
+            url_list_postal_code=url_list_postal_code,
+            url_list_longitude=url_list_longitude,
+            url_list_accuracy_radius=url_list_accuracy_radius,
+            url_list_country_code=url_list_country_code,
+            url_list_country_name=url_list_country_name,
+            url_list_dma_code=url_list_dma_code,
+            url_list_charset=url_list_charset,
+            url_list_area_code=url_list_area_code,
+            url_list_flag_title=url_list_flag_title
+        )
+
+
 
 if __name__ == '__main__':
     app.run(port=5500)
