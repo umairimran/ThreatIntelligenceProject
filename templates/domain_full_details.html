@@ -3,234 +3,200 @@
 <body>
     <nav class="navbar navbar-dark navbar-expand-md fixed-top bg-dark">
         <div class="container">
-            <button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1">
-                <span class="visually-hidden">Toggle navigation</span>
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <a href="/search_indicators" class="navbar-brand">THREAT LAB</a>
-            <div class="collapse navbar-collapse" id="navcol-1">
-                <ul class="navbar-nav flex-grow-1 justify-content-between">
-                    <li class="nav-item"><a class="nav-link" href="/search_indicators">Dashboard</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/search_indicators">Indicators</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/search_urls">URL</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/search_domains">DOMAIN</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/search_ip4">IPv4</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/search_hostnames">HOST NAME</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/logout">Login</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    <div class="container mt-5 pt-5">
-        <h1 class="text-center mb-4">Domain Full Detail</h1>
-        <hr>
-
-        <!-- Refresh Database Button -->
-        <div class="text-center mb-3">
-            <form method="POST" action="/refresh_database">
-                <button type="submit" class="btn btn-dark">Refresh Database</button>
-            </form>
-        </div>
-
-        <!-- Search Form -->
-        <form class="search-form mb-4" method="POST" action="/search_indicators">
-            <div class="input-group">
-                <span class="input-group-text"><i class="fa fa-search"></i></span>
-                <input class="form-control" type="text" name="search_query" placeholder="I am looking for.." required />
-                <button class="btn btn-light" type="submit">Search</button>
-            </div>
-        </form>
-
-        <!-- General Information Section -->
-        <div class="card mb-4">
-            <div class="card-header bg-primary text-white">
-                <h5>General Information</h5>
-            </div>
-            <div class="card-body">
-                <ul class="list-group mb-4">
-                    <li class="list-group-item"><strong>Sections:</strong> {{ general_sections }}</li>
-                    <li class="list-group-item"><strong>WHOIS:</strong> {{ general_whois }}</li>
-                    <li class="list-group-item"><strong>Alexa Rank:</strong> {{ general_alexa }}</li>
-                    <li class="list-group-item"><strong>Indicator:</strong> {{ general_indicator }}</li>
-                    <li class="list-group-item"><strong>Type:</strong> {{ general_type }}</li>
-                    <li class="list-group-item"><strong>Type Title:</strong> {{ general_type_title }}</li>
-                    <li class="list-group-item"><strong>Base Indicator ID:</strong> {{ general_base_indicator_id }}</li>
-                    <li class="list-group-item"><strong>Base Indicator:</strong> {{ general_base_indicator_indicator }}</li>
-                    <li class="list-group-item"><strong>Access Type:</strong> {{ general_base_indicator_access_type }}</li>
-                    <li class="list-group-item"><strong>Pulse Info Count:</strong> {{ general_pulse_info_count }}</li>
-                </ul>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-dark table-striped mb-4">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Name</th>
-                                    <th>Description</th>
-                                    <th>Modified</th>
-                                    <th>Created</th>
-                                    <th>Tags</th>
-                                    <th>Public</th>
-                                    <th>Author Username</th>
-                                    <th>Follower Count</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for pulse in general_pulse_info_pulses %}
-                                    <tr>
-                                        <td>{{ pulse.id }}</td>
-                                        <td class="text-truncate" style="max-width: 150px;">{{ pulse.name }}</td>
-                                        <td class="text-truncate" style="max-width: 200px;">{{ pulse.description }}</td>
-                                        <td style="max-width: 150px;">{{ pulse.modified }}</td>
-                                        <td style="max-width: 150px;">{{ pulse.created }}</td>
-                                        <td class="text-truncate" style="max-width: 100px;">
-                                            {{ pulse.tags | join(', ') if pulse.tags else 'N/A' }}
-                                        </td>
-                                        <td>{{ pulse.public }}</td>
-                                        <td class="text-truncate" style="max-width: 150px;">{{ pulse['author.username'] }}</td>
-                                        <td>{{ pulse.follower_count }}</td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+            <nav class="navbar navbar-dark navbar-expand-md fixed-top bg-dark">
+                <div class="container">
+                    <button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1">
+                        <span class="visually-hidden">Toggle navigation</span>
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <a href="/search_indicators">THREAT LAB</a>
+                    <div class="collapse navbar-collapse" id="navcol-1">
+                        <ul class="navbar-nav flex-grow-1 justify-content-between">
+                            <li class="nav-item"><a class="nav-link" href="#"></a></li>
+                            <li class="nav-item"><a class="nav-link" href="/search_indicators">Dashboard</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/search_indicators">Indicators</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/search_urls">URL</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/search_domains">DOMAIN</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/search_ip4">IPv4</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/search_hostnames">HOST NAME</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/logout">Login</a></li>
+                        </ul>
                     </div>
                 </div>
-                
-                <li class="list-group-item"><strong>References:</strong>
-                    <ul>
-                        {% for reference in general_pulse_info_references %}
-                            <li><a href="{{ reference }}">{{ reference }}</a></li>
-                        {% endfor %}
-                    </ul>
-                </li>
-                <li class="list-group-item"><strong>Related AlienVault Malware Families:</strong> {{ general_pulse_info_related_alienvault_malware_families }}</li>
-                <li class="list-group-item"><strong>Related Other Malware Families:</strong> {{ general_pulse_info_related_other_malware_families }}</li>
+            </nav>
+    
+    
+        </div>
+    </nav>
+    <section class="py-4 py-xl-5"></section>
+    <div class="container">
+        <div class="row"><div class="col-md-13">
+    <div class="side bg-dark text-light p-4">
+        <!-- General Indicator Overview -->
+        <div class="content col-12 overview">
+            <h2 class="section-heading">{{ general_indicator }} Overview</h2>
+            <p>
+                <span class="ref-label label-text">Type: </span>{{ general_type }}
+            </p>
+            <p>
+                <span class="ref-label label-text">Type Title: </span>{{ general_type_title }}
+            </p>
+            <p>
+                <span class="ref-label label-text">WHOIS: </span>{{ general_whois }}
+            </p>
+            <p>
+                <span class="ref-label label-text">Alexa Rank: </span>{{ general_alexa }}
+            </p>
+        </div>
+
+        <!-- General Base Indicator Details -->
+        <div class="details-container content">
+            <div class="data-block">
+                <p>
+                    <span class="ref-label label-text">Indicator ID: </span>{{ general_base_indicator_id }}
+                </p>
+                <p>
+                    <span class="ref-label label-text">General Indicator: </span>{{ general_base_indicator_indicator }}
+                </p>
+                <p>
+                    <span class="ref-label label-text">Access Type: </span>{{ general_base_indicator_access_type }}
+                </p>
             </div>
         </div>
 
-        <!-- Malware Information Section -->
-        <div class="card mb-4">
-            <div class="card-header bg-danger text-white">
-                <h5>Malware Information</h5>
+        <br><br>
+
+        <!-- Exploit Activity and Associated Threat Actors -->
+        <div class="content">
+            <div class="overall-container bg-black p-4">
+                <h2 class="section-heading">Exploit Activity</h2>
+                <p>
+                    <span class="ref-label label-text">Pulse Count: </span>{{ general_pulse_info_count }}
+                </p>
+               
             </div>
-            <div class="card-body">
-                <ul class="list-group mb-4">
-                    <li class="list-group-item"><strong>Malware Data:</strong> {{ malware_data }}</li>
-                    <li class="list-group-item"><strong>Malware Size:</strong> {{ malware_size }}</li>
-                    <li class="list-group-item"><strong>Malware Count:</strong> {{ malware_count }}</li>
+        </div>
+
+        <br><br>
+
+        <!-- Targeted Industries -->
+        <div class="content">
+            <div class="overall-container bg-black p-4">
+                <h2 class="section-heading">Industries Targeted</h2>
+                <div class="section">
+                    <h3>User-Created Pulses:</h3>
+                    <p>Industries: Education, Government, Healthcare, Technology, Telecommunications</p>
+                </div>
+            </div>
+        </div>
+
+        <br><br>
+
+        <!-- Pulse Info References -->
+        <div class="content">
+            <div class="overall-container bg-black p-4">
+                <h2 class="section-heading">Pulse Info References</h2>
+                <ul>
+                    {% for reference in general_pulse_info_references %}
+                        <li><a href="{{ reference }}" class="text-success" target="_blank">{{ reference }}</a></li>
+                    {% endfor %}
                 </ul>
             </div>
         </div>
 
-        <!-- URL List Section -->
-        <div class="card mb-4">
-            <div class="card-header bg-success text-white">
-                <h5>URL List</h5>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-dark table-striped">
-                        <thead>
-                            <tr>
-                                <th>URL</th>
-                                <th>Date</th>
-                                <th>Domain</th>
-                                <th>Hostname</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            
-                            {% if url_list %}
-                                {% if url_list is iterable %}
-                                    {% for item in url_list %}
-                                        <tr>
-                                            <td class="text-truncate" style="max-width: 150px;">
-                                                <a href="{{ item.url }}" class="text-truncate d-block" style="max-width: 150px;">{{ item.url }}</a>
-                                            </td>
-                                            <td class="text-truncate" style="max-width: 100px;">{{ item.date }}</td>
-                                            <td class="text-truncate" style="max-width: 100px;">{{ item.domain }}</td>
-                                            <td class="text-truncate" style="max-width: 100px;">{{ item.hostname }}</td>
-                                        </tr>
-                                    {% endfor %}
-                                {% else %}
-                                    <tr>
-                                        <td colspan="4" class="text-center">{{ url_list.url }}</td>
-                                        <td class="text-truncate" style="max-width: 100px;">{{ url_list.date }}</td>
-                                        <td class="text-truncate" style="max-width: 100px;">{{ url_list.domain }}</td>
-                                        <td class="text-truncate" style="max-width: 100px;">{{ url_list.hostname }}</td>
-                                    </tr>
-                                {% endif %}
-                            {% else %}
-                                <tr>
-                                    <td colspan="4" class="text-center">No data available</td>
-                                </tr>
-                            {% endif %}
-                        </tbody>
-                        
-                    </table>
+        <br><br>
+
+        <!-- Malware Information -->
+        <div class="content">
+            <div class="overall-container bg-black p-4">
+                <h2 class="section-heading">Malware Data</h2>
+                <p>
+                    <span class="ref-label label-text">Malware Count: </span>{{ malware_count }}
+                </p>
+                <p>
+                    <span class="ref-label label-text">Malware Size: </span>{{ malware_size }}
+                </p>
+                <div>
+                    <h3>Malware Data:</h3>
+                    <ul>
+                        {% for data in malware_data %}
+                            <li>{{ data }}</li>
+                        {% endfor %}
+                    </ul>
                 </div>
             </div>
-            
         </div>
 
-        <!-- Passive DNS Information Section -->
-        <div class="card mb-4">
-            <div class="card-header bg-warning text-white">
-                <h5>Passive DNS Information</h5>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-dark table-striped mb-4">
-                        <thead>
-                            <tr>
-                                <th>Address</th>
-                                <th>First Seen</th>
-                                <th>Last Seen</th>
-                                <th>Hostname</th>
-                                <th>Record Type</th>
-                                <th>ASN</th>
-                                <th>Indicator</th>
-                                <th>Country</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for item in passive_dns_data %}
-                                <tr>
-                                    <td class="text-truncate" style="max-width: 150px;">{{ item.address }}</td>
-                                    <td class="text-truncate" style="max-width: 100px;">{{ item.first }}</td>
-                                    <td class="text-truncate" style="max-width: 100px;">{{ item.last }}</td>
-                                    <td class="text-truncate" style="max-width: 150px;">
-                                        <a href="{{ item.indicator_link }}" class="text-truncate d-block">{{ item.hostname }}</a>
-                                    </td>
-                                    <td class="text-truncate" style="max-width: 100px;">{{ item.record_type }}</td>
-                                    <td class="text-truncate" style="max-width: 100px;">{{ item.asn }}</td>
-                                    <td class="text-truncate" style="max-width: 150px;">
-                                        <a href="{{ item.indicator_link }}">View Indicator</a>
-                                    </td>
-                                    <td>
-                                        {% if item.flag_url %}
-                                        <span title="{{ item.flag_title }}">{{ item.flag_title }}</span>
-                                    {% else %}
-                                        N/A
-                                    {% endif %}
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            
-        </div>
+        <br><br>
 
-        <div class="text-center">
-            <a href="/" class="btn btn-primary">Back to Home</a>
+    </div> <!-- End of side -->
+</div> <!-- End of col-md-6 -->
+</div>
+    </div>
+    <div class="container">
+        <div class="row"><div class="col-md-12">
+    <div id="nidsList" class="section hide">
+        <h2 class="section-heading">URL LIST</h2>
+    </div>
+    <div id="files" class="section">
+        <div class="col-12">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>DOMAIN</th>
+                        <th>URL</th>
+                        <th>DATE</th>
+                        <th>HOSTNAME</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for entry in url_list %}
+                    <tr>
+                        <td>{{ entry.domain }}</td>
+                        <td><a href="{{ entry.url }}">{{ entry.url }}</a></td>
+                        <td>{{ entry.date }}</td>
+                        <td>{{ entry.hostname }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
-
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</div>
+</div>
+    </div>
+    <div class="container"><div class="row">
+    <h2 class="section-heading">PASSIVE DNS</h2>
+    <div class="table-responsive">
+        <table id="exploitTable" class="table table-bordered table-striped w-100">
+            <thead>
+                <tr>
+                    <th>ADDRESS</th>
+                    <th>FIRST</th>
+                    <th>LAST</th>
+                    <th>HOSTNAME</th>
+                    <th>RECORD TYPE</th>
+                    <th>ASN</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in passive_dns_data %}
+                <tr>
+                    <td>{{ entry.address }}</td>
+                    <td>{{ entry.first }}</td>
+                    <td>{{ entry.last }}</td>
+                    <td>{{ entry.hostname }}</td>
+                    <td>{{ entry.record_type }}</td>
+                    <td>{{ entry.asn }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+</div>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
 </body>
+
+
 {% endblock %}

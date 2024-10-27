@@ -520,7 +520,7 @@ def domain_full_detail():
         # Extract passive DNS information
         passive_dns_count = safe_get('passive_dns.count')
         passive_dns_data = safe_get('passive_dns.passive_dns')
-        print(url_list)
+        url_list = [url_list]
         # Pass all variables to the HTML template
         return render_template('domain_full_details.html', 
             general_sections=general_sections,

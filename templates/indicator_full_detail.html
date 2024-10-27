@@ -1,4 +1,5 @@
 {% extends "html_base.html" %}
+{% block content %}
 <body>
     <nav class="navbar navbar-dark navbar-expand-md fixed-top bg-dark">
         <div class="container">
@@ -24,23 +25,7 @@
                 </div>
             </nav>
     
-            <!-- Refresh Database Button -->
-            <div class="container mt-5 pt-2"> <!-- Add margin-top to push it below the navbar -->
-                <div class="text-center mb-3"> <!-- Center the button and add margin-bottom -->
-                    <form method="POST" action="/refresh_database"> <!-- Replace with your endpoint -->
-                        <button type="submit" class="btn btn-dark">Refresh Database</button>
-                    </form>
-                </div>
-    
-                <!-- Search Form -->
-                <form class="search-form" method="POST" action="/search_indicators">
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="fa fa-search"></i></span>
-                        <input class="form-control" type="text" name="search_query" placeholder="I am looking for.." required />
-                        <button class="btn btn-light" type="submit">Search</button>
-                    </div>
-                </form>
-            </div>
+       
         </div>
     </nav>
     <section class="py-4 py-xl-5"><div class="container-fluid" style="max-width: 1400px;padding: 0;">
