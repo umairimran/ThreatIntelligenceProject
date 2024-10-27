@@ -25,13 +25,16 @@ users = retrieve_users()
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    users = retrieve_users()  # Fetch the list of users from the database
     if request.method == 'POST':
+        
         username = request.form['username']
         password = request.form['password']
-        
+        print("Username:",username)
+        print("Password:",password)
         # Create a dictionary for easy user lookup
         user_dict = {user[1]: {'password': user[2], 'email': user[3], 'system': user[4], 'service': user[5], 'indicator': user[6]} for user in users}
-        
+        print(user_dict)
         # Validate credentials
         if username in user_dict and user_dict[username]['password'] == password:
             # Store user data in session after a successful login
@@ -53,6 +56,7 @@ def logout():
     return redirect(url_for('login')) 
 @app.route('/')
 def index():
+   
     global clear_session_flag
     if  clear_session_flag:
         session.clear()
@@ -344,7 +348,7 @@ def refresh_database():
 @app.route('/admin',methods=['GET','POST'])
 def admin_page():
     if request.method=='GET':
-        return render_template('admin_dashboard.html')
+        return redirect(url_for('manage_users'))
 
 @app.route('/manage_users', methods=['GET', 'POST'])
 def manage_users():
@@ -377,7 +381,7 @@ def edit_user_endpoint():
     edit_user(user_id, username, password, email, system, service, indicator)
 
       # Return a success message
-
+    users = retrieve_users()  # Fetch the updated list of users
     # Redirect or return a success message
     return redirect(url_for('manage_users'))
 
@@ -388,7 +392,7 @@ def delete_user_endpoint():
     user_id = request.form.get('user_id')
     print(f"Deleting user with ID: {user_id}")
     delete_user(user_id)
-
+    users = retrieve_users()  # Fetch the updated list of users
     # Redirect or return a success message
     return redirect(url_for('manage_users'))
 
@@ -409,6 +413,7 @@ def create_user_endpoint():
 
     # Call the create_user function
     add_user(username, password, email, system, service, indicator)
+    users = retrieve_users()  # Fetch the updated list of users
 
     return redirect(url_for('manage_users'))
 
@@ -514,8 +519,14 @@ def domain_full_detail():
         malware_count = safe_get('malware.count')
 
         # Extract URL list information
-        url_list = json_normalize(df['url_list.url_list'][0])
-        url_list = url_list.to_dict(orient='records')[0] 
+        try:
+        # Attempt to normalize and extract the URL list
+            url_list = json_normalize(df['url_list.url_list'][0])
+            url_list = url_list.to_dict(orient='records')[0]
+        except IndexError:
+        # If an IndexError occurs, skip the processing and assign a default value
+            print("Index out of range. Skipping this entry.")
+            url_list = None  # Or use an empty dict or other default value as needed
 
         # Extract passive DNS information
         passive_dns_count = safe_get('passive_dns.count')
@@ -666,7 +677,7 @@ def url_full_detail():
         # Convert the first entry of the nested list to a dictionary
         url_list = json_normalize(df['url_list.url_list'][0][0])
         url_list = url_list.to_dict(orient='records')[0]
-
+        url_list = [url_list]
         # Extract specific URL list information
         url_list_net_loc = safe_get('url_list.net_loc')
         url_list_city_data = safe_get('url_list.city_data')
